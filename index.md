@@ -659,20 +659,25 @@ title: 首页
     const canvas = document.getElementById('pixelCanvas');
     if (!canvas) return;
     
-    const pixelSize = 4;
+    const pixelSize = 3; // 减小像素尺寸，使方程更清晰
     const colors = ['#000000', '#333333', '#666666'];
     
-    // 爱因斯坦场方程的各部分
+    // 完整的爱因斯坦场方程的各部分
     const equationParts = [
-      { x: 0.2, y: 0.5, text: "G", size: 1.5 },
-      { x: 0.25, y: 0.5, text: "μν", size: 0.8 },
-      { x: 0.32, y: 0.5, text: "=", size: 1 },
-      { x: 0.4, y: 0.5, text: "8πG", size: 1 },
-      { x: 0.5, y: 0.5, text: "T", size: 1.5 },
-      { x: 0.55, y: 0.5, text: "μν", size: 0.8 },
-      { x: 0.65, y: 0.5, text: "/", size: 1 },
-      { x: 0.7, y: 0.5, text: "c", size: 1 },
-      { x: 0.75, y: 0.5, text: "4", size: 0.8 }
+      { x: 0.10, y: 0.5, text: "R", size: 1.2 },
+      { x: 0.14, y: 0.5, text: "μν", size: 0.8 },
+      { x: 0.20, y: 0.5, text: "-", size: 1 },
+      { x: 0.25, y: 0.5, text: "1/2", size: 0.8 },
+      { x: 0.30, y: 0.5, text: "R", size: 1.2 },
+      { x: 0.34, y: 0.5, text: "g", size: 1 },
+      { x: 0.37, y: 0.5, text: "μν", size: 0.8 },
+      { x: 0.43, y: 0.5, text: "=", size: 1 },
+      { x: 0.48, y: 0.5, text: "8πG", size: 1 },
+      { x: 0.56, y: 0.5, text: "/", size: 1 },
+      { x: 0.59, y: 0.5, text: "c", size: 1 },
+      { x: 0.62, y: 0.5, text: "4", size: 0.8 },
+      { x: 0.66, y: 0.5, text: "T", size: 1.2 },
+      { x: 0.70, y: 0.5, text: "μν", size: 0.8 }
     ];
     
     // 计算画布尺寸
@@ -681,7 +686,7 @@ title: 首页
     
     // 创建随机分布的像素
     const pixelGrid = [];
-    const pixelCount = 500; // 增加像素总数
+    const pixelCount = 700; // 增加像素总数，使方程更清晰
     
     for (let i = 0; i < pixelCount; i++) {
       const pixel = document.createElement('div');
@@ -710,7 +715,7 @@ title: 首页
       const part = equationParts[partIndex];
       
       // 计算目标位置（带有一些随机偏移，以形成字符形状）
-      const offsetX = (Math.random() - 0.5) * 15;
+      const offsetX = (Math.random() - 0.5) * 10; // 减小偏移，使字符更紧凑
       const offsetY = (Math.random() - 0.5) * 15;
       
       pixel.targetX = part.x * canvasWidth + offsetX;
@@ -722,48 +727,48 @@ title: 首页
     
     // 鼠标交互 - 当鼠标移动时，像素会逐渐形成爱因斯坦场方程
     let mouseVisitedAreas = new Set();
-    const gridSize = 15; // 减小网格尺寸，使动画更敏感
-    const totalGrids = Math.ceil(canvasWidth / gridSize) * Math.ceil(canvasHeight / gridSize);
+    let lastMouseX = 0;
+    let swipeCount = 0;
+    let lastDirection = 0; // 0: 无方向, 1: 向右, -1: 向左
+    const swipeThreshold = canvasWidth / 10; // 滑动阈值
+    const requiredSwipes = 6; // 需要的滑动次数（三个来回）
     
-    // 添加初始动画效果
+    // 添加初始动画效果 - 显示约10%的方程
     setTimeout(() => {
-      // 自动触发一些区域，让方程部分显现
-      for (let i = 0; i < totalGrids / 10; i++) {
-        const randomX = Math.floor(Math.random() * Math.ceil(canvasWidth / gridSize));
-        const randomY = Math.floor(Math.random() * Math.ceil(canvasHeight / gridSize));
-        mouseVisitedAreas.add(`${randomX}-${randomY}`);
-      }
-      
-      // 应用初始效果
-      updatePixels(pixelGrid, mouseVisitedAreas, totalGrids, canvasWidth, canvasHeight);
+      updatePixels(pixelGrid, 0.1);
     }, 500);
     
     canvas.addEventListener('mousemove', function(e) {
       const rect = canvas.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
-      const mouseY = e.clientY - rect.top;
       
-      // 计算鼠标所在的网格位置
-      const gridX = Math.floor(mouseX / gridSize);
-      const gridY = Math.floor(mouseY / gridSize);
-      
-      // 记录鼠标访问过的区域（包括周围的网格）
-      for (let dx = -1; dx <= 1; dx++) {
-        for (let dy = -1; dy <= 1; dy++) {
-          const ngx = gridX + dx;
-          const ngy = gridY + dy;
-          if (ngx >= 0 && ngy >= 0 && ngx < Math.ceil(canvasWidth / gridSize) && ngy < Math.ceil(canvasHeight / gridSize)) {
-            mouseVisitedAreas.add(`${ngx}-${ngy}`);
-          }
+      // 检测滑动方向变化
+      if (Math.abs(mouseX - lastMouseX) > swipeThreshold) {
+        const currentDirection = mouseX > lastMouseX ? 1 : -1;
+        
+        // 如果方向改变，计数增加
+        if (lastDirection !== 0 && currentDirection !== lastDirection) {
+          swipeCount++;
+          
+          // 根据滑动次数更新进度
+          const progress = Math.min(1, swipeCount / requiredSwipes);
+          updatePixels(pixelGrid, progress);
         }
+        
+        lastDirection = currentDirection;
+        lastMouseX = mouseX;
       }
       
-      updatePixels(pixelGrid, mouseVisitedAreas, totalGrids, canvasWidth, canvasHeight);
+      // 如果已经完成所有滑动，保持100%进度
+      if (swipeCount >= requiredSwipes) {
+        updatePixels(pixelGrid, 1);
+      }
     });
     
     // 重置功能 - 当用户点击画布时，像素回到原始随机位置
     canvas.addEventListener('click', function() {
-      mouseVisitedAreas.clear();
+      swipeCount = 0;
+      lastDirection = 0;
       
       pixelGrid.forEach(pixel => {
         pixel.style.left = `${pixel.originalX}px`;
@@ -773,17 +778,16 @@ title: 首页
         const colorIndex = Math.floor(Math.random() * colors.length);
         pixel.style.backgroundColor = colors[colorIndex];
       });
+      
+      // 重置后显示约10%的方程
+      setTimeout(() => {
+        updatePixels(pixelGrid, 0.1);
+      }, 100);
     });
     
     // 更新像素位置和样式的函数
-    function updatePixels(pixelGrid, mouseVisitedAreas, totalGrids, canvasWidth, canvasHeight) {
-      // 计算已访问区域的比例
-      const visitedRatio = mouseVisitedAreas.size / totalGrids;
-      
+    function updatePixels(pixelGrid, progress) {
       pixelGrid.forEach(pixel => {
-        // 根据鼠标访问区域的比例，逐渐向目标位置移动
-        const progress = Math.min(1, visitedRatio * 2.5); // 当访问40%的区域时，完全形成方程
-        
         // 计算当前位置（从原始位置向目标位置过渡）
         const currentX = pixel.originalX + (pixel.targetX - pixel.originalX) * progress;
         const currentY = pixel.originalY + (pixel.targetY - pixel.originalY) * progress;
