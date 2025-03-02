@@ -1,0 +1,109 @@
+<footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-content">
+      <div class="footer-col">
+        <h2 class="footer-heading">{{ site.title }}</h2>
+        <p>{{ site.description }}</p>
+      </div>
+      
+      <div class="footer-col">
+        <h2 class="footer-heading">导航</h2>
+        <ul class="footer-links">
+          <li><a href="{{ '/' | relative_url }}">首页</a></li>
+          <li><a href="{{ '/about' | relative_url }}">关于我</a></li>
+          <li><a href="{{ '/blog' | relative_url }}">博客</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h2 class="footer-heading">联系方式</h2>
+        <ul class="footer-links">
+          {% if site.social_links.github %}
+            <li><a href="https://github.com/{{ site.social_links.github }}" target="_blank">GitHub</a></li>
+          {% endif %}
+          <li><a href="mailto:your.email@example.com">邮箱</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; {{ site.time | date: '%Y' }} {{ site.title }}. 保留所有权利。</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding: 50px 0 20px;
+    background-color: #fafafa;
+    border-top: 1px solid #eee;
+  }
+  
+  .footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+  
+  .footer-col {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 20px;
+    padding-right: 20px;
+  }
+  
+  .footer-heading {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+  }
+  
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footer-links li {
+    margin-bottom: 10px;
+  }
+  
+  .footer-links a {
+    color: #000;
+    text-decoration: none;
+    position: relative;
+  }
+  
+  .footer-links a:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: #000;
+    transition: width 0.3s ease;
+  }
+  
+  .footer-links a:hover:after {
+    width: 100%;
+  }
+  
+  .footer-bottom {
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    text-align: center;
+    font-size: 0.9em;
+    color: #666;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .footer-content {
+      flex-direction: column;
+    }
+    
+    .footer-col {
+      padding-right: 0;
+    }
+  }
+</style> 

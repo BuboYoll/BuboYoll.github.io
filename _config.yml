@@ -1,0 +1,29 @@
+title: 冯菁源的个人网站
+description: 一个极简风格的个人网站
+url: "https://BuboYoll.github.io"
+baseurl: ""
+
+# 构建设置
+markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# 排除文件
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .gitignore
+
+# 导航菜单
+header_pages:
+  - index.md
+  - about.md
+  - blog.md
+
+# 社交链接
+social_links:
+  github: BuboYoll 
