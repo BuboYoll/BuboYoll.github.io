@@ -181,6 +181,25 @@ title: 首页
 </div>
 
 <style>
+  /* 全局字体设置 - Medium博客风格 */
+  body {
+    font-family: 'Charter', 'Bitstream Charter', 'Sitka Text', Cambria, serif;
+    line-height: 1.6;
+    color: rgba(0, 0, 0, 0.84);
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  
+  p {
+    margin-bottom: 1.5em;
+    font-size: 18px;
+  }
+  
   /* 像素猫头鹰动画样式 */
   .owl-animation-container {
     position: fixed;
@@ -329,7 +348,7 @@ title: 首页
   /* 关于部分样式 */
   .about-container {
     position: relative;
-    padding: 80px 0;
+    padding: 60px 0 0 0;
     background-color: #fafafa;
     border-top: 1px solid #eee;
   }
@@ -555,6 +574,8 @@ title: 首页
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     margin-top: 30px;
+    margin-bottom: 0;
+    padding-bottom: 0;
   }
   
   .interest-item {
@@ -615,6 +636,10 @@ title: 首页
     
     .about-section {
       margin-bottom: 30px;
+    }
+    
+    .about-container {
+      padding: 40px 0 0 0;
     }
   }
 </style>
