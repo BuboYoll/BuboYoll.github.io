@@ -8,9 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // 添加自定义鼠标指针效果
   addCustomCursor();
   
-  // 添加二进制码装饰
-  addBinaryDecoration();
-  
   // 添加技能条动画
   animateSkillBars();
   
@@ -171,31 +168,6 @@ function addCustomCursor() {
   }
   
   animate();
-}
-
-// 添加二进制码装饰
-function addBinaryDecoration() {
-  const container = document.querySelector('.page-content');
-  if (!container) return;
-  
-  for (let i = 0; i < 5; i++) {
-    const binary = document.createElement('div');
-    binary.classList.add('binary-decoration');
-    
-    // 生成随机二进制字符串
-    let binaryText = '';
-    for (let j = 0; j < 200; j++) {
-      binaryText += Math.round(Math.random());
-    }
-    
-    binary.textContent = binaryText;
-    binary.style.position = 'absolute';
-    binary.style.left = Math.random() * 100 + '%';
-    binary.style.top = Math.random() * 100 + '%';
-    binary.style.transform = `rotate(${Math.random() * 90 - 45}deg)`;
-    
-    container.appendChild(binary);
-  }
 }
 
 // 添加技能条动画

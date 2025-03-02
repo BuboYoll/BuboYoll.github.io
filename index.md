@@ -7,6 +7,10 @@ title: 首页
   <div class="pixel-owl"></div>
 </div>
 
+<div class="interactive-pixel-area">
+  <div class="pixel-canvas" id="pixelCanvas"></div>
+</div>
+
 <div class="home-container">
   <h1 class="home-title">冯菁源</h1>
   
@@ -215,9 +219,9 @@ title: 首页
   
   .pixel-owl {
     position: absolute;
-    width: 60px;
-    height: 60px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cstyle%3E.pixel%7Bfill:%23000;%7D%3C/style%3E%3Crect class='pixel' x='2' y='0' width='1' height='1'/%3E%3Crect class='pixel' x='3' y='0' width='1' height='1'/%3E%3Crect class='pixel' x='6' y='0' width='1' height='1'/%3E%3Crect class='pixel' x='7' y='0' width='1' height='1'/%3E%3Crect class='pixel' x='1' y='1' width='1' height='1'/%3E%3Crect class='pixel' x='4' y='1' width='1' height='1'/%3E%3Crect class='pixel' x='5' y='1' width='1' height='1'/%3E%3Crect class='pixel' x='8' y='1' width='1' height='1'/%3E%3Crect class='pixel' x='0' y='2' width='1' height='1'/%3E%3Crect class='pixel' x='2' y='2' width='1' height='1'/%3E%3Crect class='pixel' x='3' y='2' width='1' height='1'/%3E%3Crect class='pixel' x='6' y='2' width='1' height='1'/%3E%3Crect class='pixel' x='7' y='2' width='1' height='1'/%3E%3Crect class='pixel' x='9' y='2' width='1' height='1'/%3E%3Crect class='pixel' x='0' y='3' width='1' height='1'/%3E%3Crect class='pixel' x='2' y='3' width='1' height='1'/%3E%3Crect class='pixel' x='3' y='3' width='1' height='1'/%3E%3Crect class='pixel' x='4' y='3' width='1' height='1'/%3E%3Crect class='pixel' x='5' y='3' width='1' height='1'/%3E%3Crect class='pixel' x='6' y='3' width='1' height='1'/%3E%3Crect class='pixel' x='7' y='3' width='1' height='1'/%3E%3Crect class='pixel' x='9' y='3' width='1' height='1'/%3E%3Crect class='pixel' x='0' y='4' width='1' height='1'/%3E%3Crect class='pixel' x='1' y='4' width='1' height='1'/%3E%3Crect class='pixel' x='2' y='4' width='1' height='1'/%3E%3Crect class='pixel' x='3' y='4' width='1' height='1'/%3E%3Crect class='pixel' x='4' y='4' width='1' height='1'/%3E%3Crect class='pixel' x='5' y='4' width='1' height='1'/%3E%3Crect class='pixel' x='6' y='4' width='1' height='1'/%3E%3Crect class='pixel' x='7' y='4' width='1' height='1'/%3E%3Crect class='pixel' x='8' y='4' width='1' height='1'/%3E%3Crect class='pixel' x='9' y='4' width='1' height='1'/%3E%3Crect class='pixel' x='1' y='5' width='1' height='1'/%3E%3Crect class='pixel' x='2' y='5' width='1' height='1'/%3E%3Crect class='pixel' x='3' y='5' width='1' height='1'/%3E%3Crect class='pixel' x='4' y='5' width='1' height='1'/%3E%3Crect class='pixel' x='5' y='5' width='1' height='1'/%3E%3Crect class='pixel' x='6' y='5' width='1' height='1'/%3E%3Crect class='pixel' x='7' y='5' width='1' height='1'/%3E%3Crect class='pixel' x='8' y='5' width='1' height='1'/%3E%3Crect class='pixel' x='2' y='6' width='1' height='1'/%3E%3Crect class='pixel' x='3' y='6' width='1' height='1'/%3E%3Crect class='pixel' x='4' y='6' width='1' height='1'/%3E%3Crect class='pixel' x='5' y='6' width='1' height='1'/%3E%3Crect class='pixel' x='6' y='6' width='1' height='1'/%3E%3Crect class='pixel' x='7' y='6' width='1' height='1'/%3E%3Crect class='pixel' x='3' y='7' width='1' height='1'/%3E%3Crect class='pixel' x='6' y='7' width='1' height='1'/%3E%3Crect class='pixel' x='2' y='8' width='1' height='1'/%3E%3Crect class='pixel' x='7' y='8' width='1' height='1'/%3E%3Crect class='pixel' x='1' y='9' width='1' height='1'/%3E%3Crect class='pixel' x='8' y='9' width='1' height='1'/%3E%3C/svg%3E");
+    width: 80px;
+    height: 80px;
+    background-image: url("{{ '/assets/images/owl.png' | relative_url }}");
     background-size: contain;
     background-repeat: no-repeat;
     top: 50%;
@@ -243,6 +247,32 @@ title: 首页
   @keyframes fadeOut {
     from { opacity: 1; }
     to { opacity: 0; visibility: hidden; }
+  }
+  
+  /* 交互式像素区域样式 */
+  .interactive-pixel-area {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: #fafafa;
+  }
+  
+  .pixel-canvas {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  
+  .pixel {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    transition: transform 0.3s ease, background-color 0.3s ease;
   }
   
   /* 首页容器样式 */
@@ -547,6 +577,12 @@ title: 首页
     transform: translateX(0);
   }
   
+  /* 高亮文本 */
+  .highlight {
+    color: #ff3333;
+    font-weight: 700;
+  }
+  
   /* 响应式调整 */
   @media (max-width: 768px) {
     .skills-grid,
@@ -570,56 +606,17 @@ title: 首页
     .about-section h3 {
       font-size: 1.5em;
     }
+    
+    .interactive-pixel-area {
+      height: 70vh;
+    }
   }
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // 添加鼠标移动视差效果
-    const container = document.querySelector('.home-container');
-    const decorations = document.querySelectorAll('.decoration-item');
-    
-    document.addEventListener('mousemove', function(e) {
-      const x = e.clientX / window.innerWidth;
-      const y = e.clientY / window.innerHeight;
-      
-      decorations.forEach((item, index) => {
-        const speed = (index + 1) * 20;
-        const xOffset = (x - 0.5) * speed;
-        const yOffset = (y - 0.5) * speed;
-        
-        item.style.transform = `translate(${xOffset}px, ${yOffset}px) ${item.id === 'decoration-2' ? 'rotate(45deg)' : ''}`;
-      });
-    });
-    
-    // 添加滚动效果
-    window.addEventListener('scroll', function() {
-      const scrollY = window.scrollY;
-      const title = document.querySelector('.home-title');
-      const description = document.querySelector('.home-description');
-      
-      if (title && description) {
-        title.style.transform = `translateY(${scrollY * 0.2}px)`;
-        description.style.transform = `translateY(${scrollY * 0.1}px)`;
-      }
-    });
-    
-    // 平滑滚动到锚点
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
-        
-        if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop - 80,
-            behavior: 'smooth'
-          });
-        }
-      });
-    });
+    // 初始化像素画布
+    initPixelCanvas();
     
     // 初始化技能条动画
     const skillLevels = document.querySelectorAll('.skill-level');
@@ -655,5 +652,119 @@ title: 首页
       section.style.opacity = '1';
       section.style.transform = 'translateY(0)';
     });
+    
+    // 平滑滚动到锚点
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
   });
+  
+  // 初始化像素画布
+  function initPixelCanvas() {
+    const canvas = document.getElementById('pixelCanvas');
+    if (!canvas) return;
+    
+    const pixelSize = 10;
+    const colors = ['#000000', '#ff3333', '#ffcc00'];
+    
+    // 创建网格
+    const gridSize = 20;
+    const pixelGrid = [];
+    
+    // 计算画布尺寸
+    const canvasWidth = canvas.clientWidth;
+    const canvasHeight = canvas.clientHeight;
+    
+    // 计算可以放置的像素数量
+    const pixelsX = Math.floor(canvasWidth / (pixelSize * 2));
+    const pixelsY = Math.floor(canvasHeight / (pixelSize * 2));
+    
+    // 创建像素
+    for (let i = 0; i < pixelsX; i++) {
+      for (let j = 0; j < pixelsY; j++) {
+        if (Math.random() > 0.85) { // 只显示一部分像素
+          const pixel = document.createElement('div');
+          pixel.classList.add('pixel');
+          
+          // 随机位置
+          const x = (i * pixelSize * 2) + Math.random() * pixelSize;
+          const y = (j * pixelSize * 2) + Math.random() * pixelSize;
+          
+          pixel.style.left = `${x}px`;
+          pixel.style.top = `${y}px`;
+          pixel.style.opacity = Math.random() * 0.5 + 0.1;
+          
+          // 随机颜色
+          const colorIndex = Math.floor(Math.random() * colors.length);
+          pixel.style.backgroundColor = colors[colorIndex];
+          
+          canvas.appendChild(pixel);
+          pixelGrid.push(pixel);
+        }
+      }
+    }
+    
+    // 鼠标交互
+    canvas.addEventListener('mousemove', function(e) {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      
+      pixelGrid.forEach(pixel => {
+        const pixelRect = pixel.getBoundingClientRect();
+        const pixelX = pixelRect.left - rect.left + pixelSize / 2;
+        const pixelY = pixelRect.top - rect.top + pixelSize / 2;
+        
+        // 计算距离
+        const dx = mouseX - pixelX;
+        const dy = mouseY - pixelY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // 根据距离设置变换
+        if (distance < 100) {
+          const scale = 1 + (100 - distance) / 100;
+          const angle = Math.atan2(dy, dx);
+          const translateX = Math.cos(angle) * (100 - distance) / 5;
+          const translateY = Math.sin(angle) * (100 - distance) / 5;
+          
+          pixel.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+          pixel.style.opacity = Math.min(1, pixel.style.opacity * 1.5);
+          
+          // 随机改变颜色
+          if (Math.random() > 0.95) {
+            const colorIndex = Math.floor(Math.random() * colors.length);
+            pixel.style.backgroundColor = colors[colorIndex];
+          }
+        } else {
+          pixel.style.transform = 'translate(0, 0) scale(1)';
+        }
+      });
+    });
+    
+    // 添加一些动画效果
+    setInterval(() => {
+      const randomPixel = pixelGrid[Math.floor(Math.random() * pixelGrid.length)];
+      if (randomPixel) {
+        const colorIndex = Math.floor(Math.random() * colors.length);
+        randomPixel.style.backgroundColor = colors[colorIndex];
+        randomPixel.style.transform = 'scale(1.5)';
+        
+        setTimeout(() => {
+          randomPixel.style.transform = 'scale(1)';
+        }, 500);
+      }
+    }, 1000);
+  }
 </script> 
