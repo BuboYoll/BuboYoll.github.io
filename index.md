@@ -7,8 +7,9 @@ title: 首页
   <div class="pixel-owl"></div>
 </div>
 
-<div class="interactive-pixel-area">
-  <div class="pixel-canvas" id="pixelCanvas"></div>
+<div class="starry-night-container">
+  <div class="starry-night-canvas" id="starryNightCanvas"></div>
+  <div class="site-title">冯菁源的个人网站</div>
 </div>
 
 <div id="about-section" class="about-container">
@@ -177,10 +178,6 @@ title: 首页
       </div>
     </div>
   </div>
-  
-  <div class="blog-link-container">
-    <a href="{{ '/blog' | relative_url }}" class="btn-secondary">阅读我的博客</a>
-  </div>
 </div>
 
 <style>
@@ -228,6 +225,66 @@ title: 首页
   @keyframes fadeOut {
     from { opacity: 1; }
     to { opacity: 0; visibility: hidden; }
+  }
+  
+  /* 梵高星空容器样式 */
+  .starry-night-container {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: #0a1a3f;
+    margin-bottom: 20px;
+    z-index: 1;
+  }
+  
+  .starry-night-canvas {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  
+  .site-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+    z-index: 2;
+    text-align: center;
+    font-family: 'Times New Roman', serif;
+  }
+  
+  .star {
+    position: absolute;
+    background-color: #fff;
+    border-radius: 50%;
+    animation: twinkle 4s infinite ease-in-out;
+  }
+  
+  .swirl {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(255, 255, 150, 0.8) 0%, rgba(255, 255, 150, 0) 70%);
+    animation: pulse 8s infinite ease-in-out;
+  }
+  
+  @keyframes twinkle {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; }
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.2); opacity: 0.9; }
+    100% { transform: scale(1); opacity: 0.7; }
   }
   
   /* 交互式像素区域样式 */
@@ -517,47 +574,9 @@ title: 首页
     margin-bottom: 15px;
   }
   
-  /* 博客链接容器 */
+  /* 删除博客链接容器 */
   .blog-link-container {
-    text-align: center;
-    margin-top: 60px;
-    padding-top: 40px;
-    border-top: 1px solid #eee;
-  }
-  
-  .blog-link-container .btn-secondary {
-    padding: 15px 30px;
-    font-size: 1.2em;
-    display: inline-block;
-    border: 1px solid #ff3333;
-    color: #ff3333;
-    text-decoration: none;
-    font-weight: 500;
-    letter-spacing: 1px;
-    position: relative;
-    overflow: hidden;
-    transition: color 0.3s ease;
-  }
-  
-  .blog-link-container .btn-secondary:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #ff3333;
-    transform: translateX(-100%);
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: -1;
-  }
-  
-  .blog-link-container .btn-secondary:hover {
-    color: #fff;
-  }
-  
-  .blog-link-container .btn-secondary:hover:before {
-    transform: translateX(0);
+    display: none;
   }
   
   /* 高亮文本 */
@@ -598,8 +617,8 @@ title: 首页
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // 初始化像素画布
-    initPixelCanvas();
+    // 初始化梵高星空画布
+    initStarryNight();
     
     // 初始化技能条动画
     const skillLevels = document.querySelectorAll('.skill-level');
@@ -654,196 +673,120 @@ title: 首页
     });
   });
   
-  // 初始化像素画布
-  function initPixelCanvas() {
-    const canvas = document.getElementById('pixelCanvas');
+  // 初始化梵高星空画布
+  function initStarryNight() {
+    const canvas = document.getElementById('starryNightCanvas');
     if (!canvas) return;
     
-    const pixelSize = 3; // 小像素尺寸，使方程更清晰
-    const colors = ['#000000', '#333333', '#666666'];
+    // 清空现有内容
+    canvas.innerHTML = '';
     
     // 计算画布尺寸
     const canvasWidth = canvas.clientWidth;
     const canvasHeight = canvas.clientHeight;
     
-    // 清空现有内容
-    canvas.innerHTML = '';
-    
-    // 爱因斯坦场方程的字符定义
-    const equationChars = [
-      { char: 'R', x: 0.20, y: 0.5, width: 0.04, height: 0.08 },
-      { char: 'μ', x: 0.24, y: 0.48, width: 0.02, height: 0.04 },
-      { char: 'ν', x: 0.26, y: 0.48, width: 0.02, height: 0.04 },
-      { char: '-', x: 0.29, y: 0.5, width: 0.02, height: 0.01 },
-      { char: '1', x: 0.32, y: 0.47, width: 0.01, height: 0.02 },
-      { char: '/', x: 0.33, y: 0.48, width: 0.01, height: 0.04 },
-      { char: '2', x: 0.34, y: 0.49, width: 0.01, height: 0.02 },
-      { char: 'R', x: 0.36, y: 0.5, width: 0.04, height: 0.08 },
-      { char: 'g', x: 0.41, y: 0.5, width: 0.03, height: 0.06 },
-      { char: 'μ', x: 0.44, y: 0.48, width: 0.02, height: 0.04 },
-      { char: 'ν', x: 0.46, y: 0.48, width: 0.02, height: 0.04 },
-      { char: '=', x: 0.50, y: 0.5, width: 0.03, height: 0.04 },
-      { char: '8', x: 0.54, y: 0.5, width: 0.02, height: 0.04 },
-      { char: 'π', x: 0.56, y: 0.5, width: 0.02, height: 0.04 },
-      { char: 'G', x: 0.59, y: 0.5, width: 0.03, height: 0.06 },
-      { char: '/', x: 0.63, y: 0.5, width: 0.01, height: 0.06 },
-      { char: 'c', x: 0.65, y: 0.5, width: 0.02, height: 0.04 },
-      { char: '4', x: 0.67, y: 0.47, width: 0.02, height: 0.02 },
-      { char: 'T', x: 0.70, y: 0.5, width: 0.04, height: 0.06 },
-      { char: 'μ', x: 0.74, y: 0.48, width: 0.02, height: 0.04 },
-      { char: 'ν', x: 0.76, y: 0.48, width: 0.02, height: 0.04 }
-    ];
-    
-    // 为每个字符创建像素点
-    const pixelGrid = [];
-    const pixelsPerChar = 40; // 每个字符的像素数量
-    
-    // 为每个字符创建像素
-    equationChars.forEach(charObj => {
-      // 计算字符的实际位置和大小
-      const charX = charObj.x * canvasWidth;
-      const charY = charObj.y * canvasHeight;
-      const charWidth = charObj.width * canvasWidth;
-      const charHeight = charObj.height * canvasHeight;
+    // 创建星星
+    const starCount = 200;
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
       
-      // 为每个字符创建像素
-      for (let i = 0; i < pixelsPerChar; i++) {
-        const pixel = document.createElement('div');
-        pixel.classList.add('pixel');
-        
-        // 随机初始位置（整个画布范围内）
-        const initialX = Math.random() * canvasWidth;
-        const initialY = Math.random() * canvasHeight;
-        
-        // 目标位置（字符区域内，带有一些随机性以形成字符形状）
-        const targetX = charX + (Math.random() * charWidth);
-        const targetY = charY + (Math.random() * charHeight);
-        
-        // 设置初始位置
-        pixel.style.left = `${initialX}px`;
-        pixel.style.top = `${initialY}px`;
-        pixel.style.width = `${pixelSize}px`;
-        pixel.style.height = `${pixelSize}px`;
-        pixel.style.opacity = Math.random() * 0.5 + 0.3;
-        
-        // 随机颜色
-        const colorIndex = Math.floor(Math.random() * colors.length);
-        pixel.style.backgroundColor = colors[colorIndex];
-        
-        // 存储原始位置和目标位置
-        pixel.originalX = initialX;
-        pixel.originalY = initialY;
-        pixel.targetX = targetX;
-        pixel.targetY = targetY;
-        pixel.charIndex = equationChars.indexOf(charObj); // 记录字符索引，用于分组动画
-        
-        canvas.appendChild(pixel);
-        pixelGrid.push(pixel);
-      }
-    });
-    
-    // 鼠标交互变量
-    let lastMouseX = 0;
-    let swipeCount = 0;
-    let lastDirection = 0; // 0: 无方向, 1: 向右, -1: 向左
-    const swipeThreshold = canvasWidth / 10; // 滑动阈值
-    const requiredSwipes = 6; // 需要的滑动次数（三个来回）
-    
-    // 添加初始动画效果 - 显示约5%的方程
-    setTimeout(() => {
-      updatePixels(pixelGrid, 0.05);
-    }, 500);
-    
-    // 鼠标移动事件
-    canvas.addEventListener('mousemove', function(e) {
-      const rect = canvas.getBoundingClientRect();
-      const mouseX = e.clientX - rect.left;
+      // 随机位置
+      const x = Math.random() * canvasWidth;
+      const y = Math.random() * canvasHeight;
       
-      // 检测滑动方向变化
-      if (Math.abs(mouseX - lastMouseX) > swipeThreshold) {
-        const currentDirection = mouseX > lastMouseX ? 1 : -1;
-        
-        // 如果方向改变，计数增加
-        if (lastDirection !== 0 && currentDirection !== lastDirection) {
-          swipeCount++;
-          
-          // 根据滑动次数更新进度
-          const progress = Math.min(1, swipeCount / requiredSwipes);
-          updatePixels(pixelGrid, progress);
-        }
-        
-        lastDirection = currentDirection;
-        lastMouseX = mouseX;
-      }
+      // 随机大小
+      const size = Math.random() * 3 + 1;
       
-      // 如果已经完成所有滑动，保持100%进度
-      if (swipeCount >= requiredSwipes) {
-        updatePixels(pixelGrid, 1);
-      }
-    });
-    
-    // 重置功能 - 当用户点击画布时，像素回到原始随机位置
-    canvas.addEventListener('click', function() {
-      swipeCount = 0;
-      lastDirection = 0;
+      // 随机延迟动画
+      const delay = Math.random() * 4;
       
-      pixelGrid.forEach(pixel => {
-        // 重置到随机位置
-        const newX = Math.random() * canvasWidth;
-        const newY = Math.random() * canvasHeight;
-        
-        pixel.style.left = `${newX}px`;
-        pixel.style.top = `${newY}px`;
-        pixel.style.opacity = Math.random() * 0.5 + 0.3;
-        
-        // 更新原始位置
-        pixel.originalX = newX;
-        pixel.originalY = newY;
-        
-        // 随机颜色
-        const colorIndex = Math.floor(Math.random() * colors.length);
-        pixel.style.backgroundColor = colors[colorIndex];
-      });
+      star.style.left = `${x}px`;
+      star.style.top = `${y}px`;
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.animationDelay = `${delay}s`;
       
-      // 重置后显示约5%的方程
-      setTimeout(() => {
-        updatePixels(pixelGrid, 0.05);
-      }, 100);
-    });
-    
-    // 更新像素位置和样式的函数
-    function updatePixels(pixelGrid, progress) {
-      // 按字符索引对像素进行分组，以便按顺序显示
-      const charCount = equationChars.length;
-      const charsToShow = Math.ceil(charCount * progress);
-      
-      pixelGrid.forEach(pixel => {
-        // 确定此像素是否应该移动到目标位置
-        const shouldMove = pixel.charIndex < charsToShow;
-        
-        if (shouldMove) {
-          // 计算当前位置（从原始位置向目标位置过渡）
-          const currentX = pixel.originalX + (pixel.targetX - pixel.originalX) * 1; // 完全移动到目标位置
-          const currentY = pixel.originalY + (pixel.targetY - pixel.originalY) * 1;
-          
-          // 应用位置
-          pixel.style.left = `${currentX}px`;
-          pixel.style.top = `${currentY}px`;
-          
-          // 增加不透明度
-          pixel.style.opacity = 0.8;
-          
-          // 颜色变深
-          pixel.style.backgroundColor = '#000';
-        } else {
-          // 保持在原始位置，但可能有轻微移动以示活跃
-          const jitterX = pixel.originalX + (Math.random() - 0.5) * 5;
-          const jitterY = pixel.originalY + (Math.random() - 0.5) * 5;
-          
-          pixel.style.left = `${jitterX}px`;
-          pixel.style.top = `${jitterY}px`;
-        }
-      });
+      canvas.appendChild(star);
     }
+    
+    // 创建梵高特有的漩涡
+    const swirlCount = 15;
+    const colors = ['#f9dc5c', '#ffb703', '#e9c46a', '#f4a261', '#e76f51'];
+    
+    for (let i = 0; i < swirlCount; i++) {
+      const swirl = document.createElement('div');
+      swirl.classList.add('swirl');
+      
+      // 随机位置
+      const x = Math.random() * canvasWidth;
+      const y = Math.random() * canvasHeight;
+      
+      // 随机大小
+      const size = Math.random() * 100 + 50;
+      
+      // 随机颜色
+      const colorIndex = Math.floor(Math.random() * colors.length);
+      const color = colors[colorIndex];
+      
+      // 随机延迟动画
+      const delay = Math.random() * 8;
+      
+      swirl.style.left = `${x}px`;
+      swirl.style.top = `${y}px`;
+      swirl.style.width = `${size}px`;
+      swirl.style.height = `${size}px`;
+      swirl.style.background = `radial-gradient(circle at center, ${color} 0%, rgba(255, 255, 150, 0) 70%)`;
+      swirl.style.animationDelay = `${delay}s`;
+      
+      // 添加梵高特有的笔触效果
+      const brushStrokes = Math.floor(Math.random() * 3) + 2;
+      for (let j = 0; j < brushStrokes; j++) {
+        const stroke = document.createElement('div');
+        const strokeWidth = size * 0.8;
+        const strokeHeight = size * 0.2;
+        const angle = Math.random() * 360;
+        
+        stroke.style.position = 'absolute';
+        stroke.style.width = `${strokeWidth}px`;
+        stroke.style.height = `${strokeHeight}px`;
+        stroke.style.backgroundColor = color;
+        stroke.style.opacity = '0.6';
+        stroke.style.borderRadius = '40%';
+        stroke.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+        stroke.style.top = '50%';
+        stroke.style.left = '50%';
+        
+        swirl.appendChild(stroke);
+      }
+      
+      canvas.appendChild(swirl);
+    }
+    
+    // 添加月亮
+    const moon = document.createElement('div');
+    moon.style.position = 'absolute';
+    moon.style.width = '80px';
+    moon.style.height = '80px';
+    moon.style.borderRadius = '50%';
+    moon.style.backgroundColor = '#f9dc5c';
+    moon.style.boxShadow = '0 0 40px rgba(249, 220, 92, 0.8)';
+    moon.style.top = '20%';
+    moon.style.right = '15%';
+    
+    canvas.appendChild(moon);
+    
+    // 添加山丘轮廓
+    const hills = document.createElement('div');
+    hills.style.position = 'absolute';
+    hills.style.bottom = '0';
+    hills.style.width = '100%';
+    hills.style.height = '25%';
+    hills.style.background = 'linear-gradient(180deg, transparent 0%, #0a1a3f 90%)';
+    
+    // 添加山丘的波浪形状
+    hills.style.clipPath = 'polygon(0% 100%, 0% 40%, 5% 45%, 10% 40%, 15% 45%, 20% 35%, 25% 40%, 30% 45%, 35% 40%, 40% 50%, 45% 45%, 50% 35%, 55% 45%, 60% 40%, 65% 45%, 70% 35%, 75% 45%, 80% 40%, 85% 45%, 90% 40%, 95% 45%, 100% 40%, 100% 100%)';
+    
+    canvas.appendChild(hills);
   }
 </script> 
