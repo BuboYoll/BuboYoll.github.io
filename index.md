@@ -659,85 +659,102 @@ title: 首页
     const canvas = document.getElementById('pixelCanvas');
     if (!canvas) return;
     
-    const pixelSize = 3; // 减小像素尺寸，使方程更清晰
+    const pixelSize = 3; // 小像素尺寸，使方程更清晰
     const colors = ['#000000', '#333333', '#666666'];
-    
-    // 完整的爱因斯坦场方程的各部分
-    const equationParts = [
-      { x: 0.10, y: 0.5, text: "R", size: 1.2 },
-      { x: 0.14, y: 0.5, text: "μν", size: 0.8 },
-      { x: 0.20, y: 0.5, text: "-", size: 1 },
-      { x: 0.25, y: 0.5, text: "1/2", size: 0.8 },
-      { x: 0.30, y: 0.5, text: "R", size: 1.2 },
-      { x: 0.34, y: 0.5, text: "g", size: 1 },
-      { x: 0.37, y: 0.5, text: "μν", size: 0.8 },
-      { x: 0.43, y: 0.5, text: "=", size: 1 },
-      { x: 0.48, y: 0.5, text: "8πG", size: 1 },
-      { x: 0.56, y: 0.5, text: "/", size: 1 },
-      { x: 0.59, y: 0.5, text: "c", size: 1 },
-      { x: 0.62, y: 0.5, text: "4", size: 0.8 },
-      { x: 0.66, y: 0.5, text: "T", size: 1.2 },
-      { x: 0.70, y: 0.5, text: "μν", size: 0.8 }
-    ];
     
     // 计算画布尺寸
     const canvasWidth = canvas.clientWidth;
     const canvasHeight = canvas.clientHeight;
     
-    // 创建随机分布的像素
+    // 清空现有内容
+    canvas.innerHTML = '';
+    
+    // 爱因斯坦场方程的字符定义
+    const equationChars = [
+      { char: 'R', x: 0.20, y: 0.5, width: 0.04, height: 0.08 },
+      { char: 'μ', x: 0.24, y: 0.48, width: 0.02, height: 0.04 },
+      { char: 'ν', x: 0.26, y: 0.48, width: 0.02, height: 0.04 },
+      { char: '-', x: 0.29, y: 0.5, width: 0.02, height: 0.01 },
+      { char: '1', x: 0.32, y: 0.47, width: 0.01, height: 0.02 },
+      { char: '/', x: 0.33, y: 0.48, width: 0.01, height: 0.04 },
+      { char: '2', x: 0.34, y: 0.49, width: 0.01, height: 0.02 },
+      { char: 'R', x: 0.36, y: 0.5, width: 0.04, height: 0.08 },
+      { char: 'g', x: 0.41, y: 0.5, width: 0.03, height: 0.06 },
+      { char: 'μ', x: 0.44, y: 0.48, width: 0.02, height: 0.04 },
+      { char: 'ν', x: 0.46, y: 0.48, width: 0.02, height: 0.04 },
+      { char: '=', x: 0.50, y: 0.5, width: 0.03, height: 0.04 },
+      { char: '8', x: 0.54, y: 0.5, width: 0.02, height: 0.04 },
+      { char: 'π', x: 0.56, y: 0.5, width: 0.02, height: 0.04 },
+      { char: 'G', x: 0.59, y: 0.5, width: 0.03, height: 0.06 },
+      { char: '/', x: 0.63, y: 0.5, width: 0.01, height: 0.06 },
+      { char: 'c', x: 0.65, y: 0.5, width: 0.02, height: 0.04 },
+      { char: '4', x: 0.67, y: 0.47, width: 0.02, height: 0.02 },
+      { char: 'T', x: 0.70, y: 0.5, width: 0.04, height: 0.06 },
+      { char: 'μ', x: 0.74, y: 0.48, width: 0.02, height: 0.04 },
+      { char: 'ν', x: 0.76, y: 0.48, width: 0.02, height: 0.04 }
+    ];
+    
+    // 为每个字符创建像素点
     const pixelGrid = [];
-    const pixelCount = 700; // 增加像素总数，使方程更清晰
+    const pixelsPerChar = 40; // 每个字符的像素数量
     
-    for (let i = 0; i < pixelCount; i++) {
-      const pixel = document.createElement('div');
-      pixel.classList.add('pixel');
+    // 为每个字符创建像素
+    equationChars.forEach(charObj => {
+      // 计算字符的实际位置和大小
+      const charX = charObj.x * canvasWidth;
+      const charY = charObj.y * canvasHeight;
+      const charWidth = charObj.width * canvasWidth;
+      const charHeight = charObj.height * canvasHeight;
       
-      // 随机位置
-      const x = Math.random() * canvasWidth;
-      const y = Math.random() * canvasHeight;
-      
-      pixel.style.left = `${x}px`;
-      pixel.style.top = `${y}px`;
-      pixel.style.opacity = Math.random() * 0.5 + 0.3;
-      pixel.style.width = `${pixelSize}px`;
-      pixel.style.height = `${pixelSize}px`;
-      
-      // 随机颜色
-      const colorIndex = Math.floor(Math.random() * colors.length);
-      pixel.style.backgroundColor = colors[colorIndex];
-      
-      // 存储原始位置和目标位置
-      pixel.originalX = x;
-      pixel.originalY = y;
-      
-      // 为每个像素分配一个方程部分的目标位置
-      const partIndex = i % equationParts.length;
-      const part = equationParts[partIndex];
-      
-      // 计算目标位置（带有一些随机偏移，以形成字符形状）
-      const offsetX = (Math.random() - 0.5) * 10; // 减小偏移，使字符更紧凑
-      const offsetY = (Math.random() - 0.5) * 15;
-      
-      pixel.targetX = part.x * canvasWidth + offsetX;
-      pixel.targetY = part.y * canvasHeight + offsetY;
-      
-      canvas.appendChild(pixel);
-      pixelGrid.push(pixel);
-    }
+      // 为每个字符创建像素
+      for (let i = 0; i < pixelsPerChar; i++) {
+        const pixel = document.createElement('div');
+        pixel.classList.add('pixel');
+        
+        // 随机初始位置（整个画布范围内）
+        const initialX = Math.random() * canvasWidth;
+        const initialY = Math.random() * canvasHeight;
+        
+        // 目标位置（字符区域内，带有一些随机性以形成字符形状）
+        const targetX = charX + (Math.random() * charWidth);
+        const targetY = charY + (Math.random() * charHeight);
+        
+        // 设置初始位置
+        pixel.style.left = `${initialX}px`;
+        pixel.style.top = `${initialY}px`;
+        pixel.style.width = `${pixelSize}px`;
+        pixel.style.height = `${pixelSize}px`;
+        pixel.style.opacity = Math.random() * 0.5 + 0.3;
+        
+        // 随机颜色
+        const colorIndex = Math.floor(Math.random() * colors.length);
+        pixel.style.backgroundColor = colors[colorIndex];
+        
+        // 存储原始位置和目标位置
+        pixel.originalX = initialX;
+        pixel.originalY = initialY;
+        pixel.targetX = targetX;
+        pixel.targetY = targetY;
+        pixel.charIndex = equationChars.indexOf(charObj); // 记录字符索引，用于分组动画
+        
+        canvas.appendChild(pixel);
+        pixelGrid.push(pixel);
+      }
+    });
     
-    // 鼠标交互 - 当鼠标移动时，像素会逐渐形成爱因斯坦场方程
-    let mouseVisitedAreas = new Set();
+    // 鼠标交互变量
     let lastMouseX = 0;
     let swipeCount = 0;
     let lastDirection = 0; // 0: 无方向, 1: 向右, -1: 向左
     const swipeThreshold = canvasWidth / 10; // 滑动阈值
     const requiredSwipes = 6; // 需要的滑动次数（三个来回）
     
-    // 添加初始动画效果 - 显示约10%的方程
+    // 添加初始动画效果 - 显示约5%的方程
     setTimeout(() => {
-      updatePixels(pixelGrid, 0.1);
+      updatePixels(pixelGrid, 0.05);
     }, 500);
     
+    // 鼠标移动事件
     canvas.addEventListener('mousemove', function(e) {
       const rect = canvas.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
@@ -771,37 +788,60 @@ title: 首页
       lastDirection = 0;
       
       pixelGrid.forEach(pixel => {
-        pixel.style.left = `${pixel.originalX}px`;
-        pixel.style.top = `${pixel.originalY}px`;
+        // 重置到随机位置
+        const newX = Math.random() * canvasWidth;
+        const newY = Math.random() * canvasHeight;
+        
+        pixel.style.left = `${newX}px`;
+        pixel.style.top = `${newY}px`;
         pixel.style.opacity = Math.random() * 0.5 + 0.3;
         
+        // 更新原始位置
+        pixel.originalX = newX;
+        pixel.originalY = newY;
+        
+        // 随机颜色
         const colorIndex = Math.floor(Math.random() * colors.length);
         pixel.style.backgroundColor = colors[colorIndex];
       });
       
-      // 重置后显示约10%的方程
+      // 重置后显示约5%的方程
       setTimeout(() => {
-        updatePixels(pixelGrid, 0.1);
+        updatePixels(pixelGrid, 0.05);
       }, 100);
     });
     
     // 更新像素位置和样式的函数
     function updatePixels(pixelGrid, progress) {
+      // 按字符索引对像素进行分组，以便按顺序显示
+      const charCount = equationChars.length;
+      const charsToShow = Math.ceil(charCount * progress);
+      
       pixelGrid.forEach(pixel => {
-        // 计算当前位置（从原始位置向目标位置过渡）
-        const currentX = pixel.originalX + (pixel.targetX - pixel.originalX) * progress;
-        const currentY = pixel.originalY + (pixel.targetY - pixel.originalY) * progress;
+        // 确定此像素是否应该移动到目标位置
+        const shouldMove = pixel.charIndex < charsToShow;
         
-        // 应用位置
-        pixel.style.left = `${currentX}px`;
-        pixel.style.top = `${currentY}px`;
-        
-        // 根据进度增加不透明度
-        pixel.style.opacity = 0.3 + progress * 0.7;
-        
-        // 当接近目标位置时，颜色变深
-        if (progress > 0.8) {
+        if (shouldMove) {
+          // 计算当前位置（从原始位置向目标位置过渡）
+          const currentX = pixel.originalX + (pixel.targetX - pixel.originalX) * 1; // 完全移动到目标位置
+          const currentY = pixel.originalY + (pixel.targetY - pixel.originalY) * 1;
+          
+          // 应用位置
+          pixel.style.left = `${currentX}px`;
+          pixel.style.top = `${currentY}px`;
+          
+          // 增加不透明度
+          pixel.style.opacity = 0.8;
+          
+          // 颜色变深
           pixel.style.backgroundColor = '#000';
+        } else {
+          // 保持在原始位置，但可能有轻微移动以示活跃
+          const jitterX = pixel.originalX + (Math.random() - 0.5) * 5;
+          const jitterY = pixel.originalY + (Math.random() - 0.5) * 5;
+          
+          pixel.style.left = `${jitterX}px`;
+          pixel.style.top = `${jitterY}px`;
         }
       });
     }
