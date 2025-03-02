@@ -187,6 +187,21 @@ title: 首页
     line-height: 1.6;
     color: rgba(0, 0, 0, 0.84);
     -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .wrapper {
+    flex: 1;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -250,7 +265,7 @@ title: 首页
   .starry-night-container {
     position: relative;
     width: 100%;
-    height: 60vh;
+    height: 50vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -348,9 +363,12 @@ title: 首页
   /* 关于部分样式 */
   .about-container {
     position: relative;
-    padding: 60px 0 0 0;
+    padding: 40px 0 0 0;
     background-color: #fafafa;
     border-top: 1px solid #eee;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
   
   .section-title {
@@ -363,10 +381,14 @@ title: 首页
   .about-content {
     max-width: 900px;
     margin: 0 auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
   
   .about-section {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     position: relative;
   }
   
@@ -574,7 +596,7 @@ title: 首页
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     margin-top: 30px;
-    margin-bottom: 0;
+    margin-bottom: 40px;
     padding-bottom: 0;
   }
   
@@ -635,11 +657,15 @@ title: 首页
     }
     
     .about-section {
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
     
     .about-container {
-      padding: 40px 0 0 0;
+      padding: 30px 0 0 0;
+    }
+    
+    .starry-night-container {
+      height: 40vh;
     }
   }
 </style>
