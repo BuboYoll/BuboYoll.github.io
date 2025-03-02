@@ -1,12 +1,46 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   {%- seo -%}
   <title>{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
   <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}">
-  <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
+  <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
+  <script src="{{ "/assets/js/main.js" | relative_url }}"></script>
+  
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .page-content {
+      flex: 1;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+    
+    .wrapper {
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+    
+    /* 隐藏几何元素 */
+    .geometric-element {
+      display: none !important;
+    }
+    
+    /* 隐藏自定义光标 */
+    .cursor, .cursor-follower {
+      display: none !important;
+    }
+  </style>
   {%- feed_meta -%}
   {%- if jekyll.environment == 'production' and site.google_analytics -%}
     {%- include google-analytics.html -%}
