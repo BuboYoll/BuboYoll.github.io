@@ -347,7 +347,7 @@ title: 首页
   }
   
   .about-section {
-    margin-bottom: 80px;
+    margin-bottom: 40px;
     position: relative;
   }
   
@@ -611,6 +611,10 @@ title: 首页
     
     .interactive-pixel-area {
       height: 70vh;
+    }
+    
+    .about-section {
+      margin-bottom: 30px;
     }
   }
 </style>
