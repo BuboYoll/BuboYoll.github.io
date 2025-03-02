@@ -7,7 +7,7 @@ title: 首页
   <div class="pixel-owl"></div>
 </div>
 
-<div class="interactive-pixel-area" style="display: none;">
+<div class="interactive-pixel-area">
   <div class="pixel-canvas" id="pixelCanvas"></div>
 </div>
 
@@ -23,12 +23,6 @@ title: 首页
   <div class="home-links">
     <a href="#about-section" class="btn-primary">了解我</a>
   </div>
-</div>
-
-<div class="home-decoration">
-  <div class="decoration-item" id="decoration-1"></div>
-  <div class="decoration-item" id="decoration-2"></div>
-  <div class="decoration-item" id="decoration-3"></div>
 </div>
 
 <div id="about-section" class="about-container">
@@ -254,7 +248,7 @@ title: 首页
   .interactive-pixel-area {
     position: relative;
     width: 100%;
-    height: 100vh;
+    height: 40vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -270,8 +264,8 @@ title: 首页
   
   .pixel {
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: 5px;
+    height: 5px;
     background-color: #000;
     transition: transform 0.3s ease, background-color 0.3s ease;
   }
@@ -677,95 +671,120 @@ title: 首页
     const canvas = document.getElementById('pixelCanvas');
     if (!canvas) return;
     
-    const pixelSize = 10;
-    const colors = ['#000000', '#ff3333', '#ffcc00'];
+    const pixelSize = 5;
+    const colors = ['#000000', '#333333', '#666666'];
     
-    // 创建网格
-    const gridSize = 20;
-    const pixelGrid = [];
+    // 爱因斯坦场方程的各部分
+    const equationParts = [
+      { x: 0.2, y: 0.5, text: "G", size: 1.5 },
+      { x: 0.25, y: 0.5, text: "μν", size: 0.8 },
+      { x: 0.32, y: 0.5, text: "=", size: 1 },
+      { x: 0.4, y: 0.5, text: "8πG", size: 1 },
+      { x: 0.5, y: 0.5, text: "T", size: 1.5 },
+      { x: 0.55, y: 0.5, text: "μν", size: 0.8 },
+      { x: 0.65, y: 0.5, text: "/", size: 1 },
+      { x: 0.7, y: 0.5, text: "c", size: 1 },
+      { x: 0.75, y: 0.5, text: "4", size: 0.8 }
+    ];
     
     // 计算画布尺寸
     const canvasWidth = canvas.clientWidth;
     const canvasHeight = canvas.clientHeight;
     
-    // 计算可以放置的像素数量
-    const pixelsX = Math.floor(canvasWidth / (pixelSize * 2));
-    const pixelsY = Math.floor(canvasHeight / (pixelSize * 2));
+    // 创建随机分布的像素
+    const pixelGrid = [];
+    const pixelCount = 300; // 像素总数
     
-    // 创建像素
-    for (let i = 0; i < pixelsX; i++) {
-      for (let j = 0; j < pixelsY; j++) {
-        if (Math.random() > 0.85) { // 只显示一部分像素
-          const pixel = document.createElement('div');
-          pixel.classList.add('pixel');
-          
-          // 随机位置
-          const x = (i * pixelSize * 2) + Math.random() * pixelSize;
-          const y = (j * pixelSize * 2) + Math.random() * pixelSize;
-          
-          pixel.style.left = `${x}px`;
-          pixel.style.top = `${y}px`;
-          pixel.style.opacity = Math.random() * 0.5 + 0.1;
-          
-          // 随机颜色
-          const colorIndex = Math.floor(Math.random() * colors.length);
-          pixel.style.backgroundColor = colors[colorIndex];
-          
-          canvas.appendChild(pixel);
-          pixelGrid.push(pixel);
-        }
-      }
+    for (let i = 0; i < pixelCount; i++) {
+      const pixel = document.createElement('div');
+      pixel.classList.add('pixel');
+      
+      // 随机位置
+      const x = Math.random() * canvasWidth;
+      const y = Math.random() * canvasHeight;
+      
+      pixel.style.left = `${x}px`;
+      pixel.style.top = `${y}px`;
+      pixel.style.opacity = Math.random() * 0.5 + 0.3;
+      
+      // 随机颜色
+      const colorIndex = Math.floor(Math.random() * colors.length);
+      pixel.style.backgroundColor = colors[colorIndex];
+      
+      // 存储原始位置和目标位置
+      pixel.originalX = x;
+      pixel.originalY = y;
+      
+      // 为每个像素分配一个方程部分的目标位置
+      const partIndex = i % equationParts.length;
+      const part = equationParts[partIndex];
+      
+      // 计算目标位置（带有一些随机偏移，以形成字符形状）
+      const offsetX = (Math.random() - 0.5) * 15;
+      const offsetY = (Math.random() - 0.5) * 15;
+      
+      pixel.targetX = part.x * canvasWidth + offsetX;
+      pixel.targetY = part.y * canvasHeight + offsetY;
+      
+      canvas.appendChild(pixel);
+      pixelGrid.push(pixel);
     }
     
-    // 鼠标交互
+    // 鼠标交互 - 当鼠标移动时，像素会逐渐形成爱因斯坦场方程
+    let mouseVisitedAreas = new Set();
+    const gridSize = 20;
+    const totalGrids = Math.ceil(canvasWidth / gridSize) * Math.ceil(canvasHeight / gridSize);
+    
     canvas.addEventListener('mousemove', function(e) {
       const rect = canvas.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
       const mouseY = e.clientY - rect.top;
       
+      // 计算鼠标所在的网格位置
+      const gridX = Math.floor(mouseX / gridSize);
+      const gridY = Math.floor(mouseY / gridSize);
+      const gridKey = `${gridX}-${gridY}`;
+      
+      // 记录鼠标访问过的区域
+      mouseVisitedAreas.add(gridKey);
+      
+      // 计算已访问区域的比例
+      const visitedRatio = mouseVisitedAreas.size / totalGrids;
+      
       pixelGrid.forEach(pixel => {
-        const pixelRect = pixel.getBoundingClientRect();
-        const pixelX = pixelRect.left - rect.left + pixelSize / 2;
-        const pixelY = pixelRect.top - rect.top + pixelSize / 2;
+        // 根据鼠标访问区域的比例，逐渐向目标位置移动
+        const progress = Math.min(1, visitedRatio * 3); // 当访问1/3的区域时，完全形成方程
         
-        // 计算距离
-        const dx = mouseX - pixelX;
-        const dy = mouseY - pixelY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        // 计算当前位置（从原始位置向目标位置过渡）
+        const currentX = pixel.originalX + (pixel.targetX - pixel.originalX) * progress;
+        const currentY = pixel.originalY + (pixel.targetY - pixel.originalY) * progress;
         
-        // 根据距离设置变换
-        if (distance < 100) {
-          const scale = 1 + (100 - distance) / 100;
-          const angle = Math.atan2(dy, dx);
-          const translateX = Math.cos(angle) * (100 - distance) / 5;
-          const translateY = Math.sin(angle) * (100 - distance) / 5;
-          
-          pixel.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-          pixel.style.opacity = Math.min(1, pixel.style.opacity * 1.5);
-          
-          // 随机改变颜色
-          if (Math.random() > 0.95) {
-            const colorIndex = Math.floor(Math.random() * colors.length);
-            pixel.style.backgroundColor = colors[colorIndex];
-          }
-        } else {
-          pixel.style.transform = 'translate(0, 0) scale(1)';
+        // 应用位置
+        pixel.style.left = `${currentX}px`;
+        pixel.style.top = `${currentY}px`;
+        
+        // 根据进度增加不透明度
+        pixel.style.opacity = 0.3 + progress * 0.7;
+        
+        // 当接近目标位置时，颜色变深
+        if (progress > 0.8) {
+          pixel.style.backgroundColor = '#000';
         }
       });
     });
     
-    // 添加一些动画效果
-    setInterval(() => {
-      const randomPixel = pixelGrid[Math.floor(Math.random() * pixelGrid.length)];
-      if (randomPixel) {
-        const colorIndex = Math.floor(Math.random() * colors.length);
-        randomPixel.style.backgroundColor = colors[colorIndex];
-        randomPixel.style.transform = 'scale(1.5)';
+    // 重置功能 - 当用户点击画布时，像素回到原始随机位置
+    canvas.addEventListener('click', function() {
+      mouseVisitedAreas.clear();
+      
+      pixelGrid.forEach(pixel => {
+        pixel.style.left = `${pixel.originalX}px`;
+        pixel.style.top = `${pixel.originalY}px`;
+        pixel.style.opacity = Math.random() * 0.5 + 0.3;
         
-        setTimeout(() => {
-          randomPixel.style.transform = 'scale(1)';
-        }, 500);
-      }
-    }, 1000);
+        const colorIndex = Math.floor(Math.random() * colors.length);
+        pixel.style.backgroundColor = colors[colorIndex];
+      });
+    });
   }
 </script> 
