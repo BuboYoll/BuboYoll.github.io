@@ -192,16 +192,26 @@ title: 首页
     min-height: 100vh;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
+  }
+  
+  html {
+    overflow-x: hidden;
+    height: 100%;
   }
   
   .page-content {
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-height: 0; /* 防止内容溢出 */
   }
   
   .wrapper {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* 防止内容溢出 */
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -323,41 +333,20 @@ title: 首页
   
   /* 交互式像素区域样式 */
   .interactive-pixel-area {
-    position: relative;
-    width: 100%;
-    height: 60vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    background-color: #fafafa;
-    margin-bottom: 20px;
-    z-index: 1;
+    display: none; /* 移除未使用的元素 */
   }
   
   .pixel-canvas {
-    width: 100%;
-    height: 100%;
-    position: relative;
+    display: none; /* 移除未使用的元素 */
   }
   
   .pixel {
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    background-color: #000;
-    transition: transform 0.3s ease, background-color 0.3s ease, left 0.5s ease, top 0.5s ease;
+    display: none; /* 移除未使用的元素 */
   }
   
   /* 首页容器样式 */
   .home-container {
-    position: relative;
-    min-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    z-index: 2;
-    padding-bottom: 50px;
+    display: none; /* 移除未使用的元素 */
   }
   
   /* 关于部分样式 */
@@ -369,6 +358,9 @@ title: 首页
     flex: 1;
     display: flex;
     flex-direction: column;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    width: 100%;
   }
   
   .section-title {
@@ -379,12 +371,14 @@ title: 首页
   }
   
   .about-content {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    width: 100%;
+    padding: 0 20px;
   }
   
   .about-section {
@@ -419,8 +413,8 @@ title: 首页
   /* 技能部分 */
   .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 40px;
     margin-top: 30px;
   }
   
@@ -545,8 +539,8 @@ title: 首页
   /* 项目部分 */
   .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
     margin-top: 30px;
   }
   
@@ -593,10 +587,10 @@ title: 首页
   /* 兴趣爱好部分 */
   .interests-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
     margin-top: 30px;
-    margin-bottom: 40px;
+    margin-bottom: 0;
     padding-bottom: 0;
   }
   
@@ -630,10 +624,16 @@ title: 首页
   
   /* 响应式调整 */
   @media (max-width: 768px) {
-    .skills-grid,
-    .projects-grid,
-    .interests-container {
+    .skills-grid {
       grid-template-columns: 1fr;
+    }
+    
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .interests-container {
+      grid-template-columns: 1fr 1fr;
     }
     
     .timeline {
@@ -726,6 +726,27 @@ title: 首页
         }
       });
     });
+    
+    // 修复页面底部空白问题
+    function fixBottomSpace() {
+      document.body.style.minHeight = '100vh';
+      document.body.style.height = 'auto';
+      
+      // 移除可能导致空白的几何元素
+      const geometricElements = document.querySelectorAll('.geometric-element');
+      geometricElements.forEach(el => el.remove());
+      
+      // 确保内容区域不会超出视口
+      const aboutContainer = document.querySelector('.about-container');
+      if (aboutContainer) {
+        aboutContainer.style.marginBottom = '0';
+        aboutContainer.style.paddingBottom = '0';
+      }
+    }
+    
+    // 调用修复函数
+    fixBottomSpace();
+    window.addEventListener('resize', fixBottomSpace);
   });
   
   // 初始化梵高星空画布
