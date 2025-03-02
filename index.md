@@ -11,20 +11,6 @@ title: 首页
   <div class="pixel-canvas" id="pixelCanvas"></div>
 </div>
 
-<div class="home-container">
-  <h1 class="home-title">冯菁源</h1>
-  
-  <div class="line"></div>
-  
-  <p class="home-description">
-    我是一名充满激情的<span class="highlight">开发者</span>与<span class="highlight">创造者</span>，专注于构建美观且实用的数字体验。
-  </p>
-  
-  <div class="home-links">
-    <a href="#about-section" class="btn-primary">了解我</a>
-  </div>
-</div>
-
 <div id="about-section" class="about-container">
   <h2 class="section-title">关于我</h2>
   
@@ -248,12 +234,14 @@ title: 首页
   .interactive-pixel-area {
     position: relative;
     width: 100%;
-    height: 40vh;
+    height: 60vh;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     background-color: #fafafa;
+    margin-bottom: 20px;
+    z-index: 1;
   }
   
   .pixel-canvas {
@@ -267,7 +255,7 @@ title: 首页
     width: 5px;
     height: 5px;
     background-color: #000;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    transition: transform 0.3s ease, background-color 0.3s ease, left 0.5s ease, top 0.5s ease;
   }
   
   /* 首页容器样式 */
@@ -671,7 +659,7 @@ title: 首页
     const canvas = document.getElementById('pixelCanvas');
     if (!canvas) return;
     
-    const pixelSize = 5;
+    const pixelSize = 4;
     const colors = ['#000000', '#333333', '#666666'];
     
     // 爱因斯坦场方程的各部分
@@ -693,7 +681,7 @@ title: 首页
     
     // 创建随机分布的像素
     const pixelGrid = [];
-    const pixelCount = 300; // 像素总数
+    const pixelCount = 500; // 增加像素总数
     
     for (let i = 0; i < pixelCount; i++) {
       const pixel = document.createElement('div');
@@ -706,6 +694,8 @@ title: 首页
       pixel.style.left = `${x}px`;
       pixel.style.top = `${y}px`;
       pixel.style.opacity = Math.random() * 0.5 + 0.3;
+      pixel.style.width = `${pixelSize}px`;
+      pixel.style.height = `${pixelSize}px`;
       
       // 随机颜色
       const colorIndex = Math.floor(Math.random() * colors.length);
@@ -732,8 +722,21 @@ title: 首页
     
     // 鼠标交互 - 当鼠标移动时，像素会逐渐形成爱因斯坦场方程
     let mouseVisitedAreas = new Set();
-    const gridSize = 20;
+    const gridSize = 15; // 减小网格尺寸，使动画更敏感
     const totalGrids = Math.ceil(canvasWidth / gridSize) * Math.ceil(canvasHeight / gridSize);
+    
+    // 添加初始动画效果
+    setTimeout(() => {
+      // 自动触发一些区域，让方程部分显现
+      for (let i = 0; i < totalGrids / 10; i++) {
+        const randomX = Math.floor(Math.random() * Math.ceil(canvasWidth / gridSize));
+        const randomY = Math.floor(Math.random() * Math.ceil(canvasHeight / gridSize));
+        mouseVisitedAreas.add(`${randomX}-${randomY}`);
+      }
+      
+      // 应用初始效果
+      updatePixels(pixelGrid, mouseVisitedAreas, totalGrids, canvasWidth, canvasHeight);
+    }, 500);
     
     canvas.addEventListener('mousemove', function(e) {
       const rect = canvas.getBoundingClientRect();
@@ -743,17 +746,43 @@ title: 首页
       // 计算鼠标所在的网格位置
       const gridX = Math.floor(mouseX / gridSize);
       const gridY = Math.floor(mouseY / gridSize);
-      const gridKey = `${gridX}-${gridY}`;
       
-      // 记录鼠标访问过的区域
-      mouseVisitedAreas.add(gridKey);
+      // 记录鼠标访问过的区域（包括周围的网格）
+      for (let dx = -1; dx <= 1; dx++) {
+        for (let dy = -1; dy <= 1; dy++) {
+          const ngx = gridX + dx;
+          const ngy = gridY + dy;
+          if (ngx >= 0 && ngy >= 0 && ngx < Math.ceil(canvasWidth / gridSize) && ngy < Math.ceil(canvasHeight / gridSize)) {
+            mouseVisitedAreas.add(`${ngx}-${ngy}`);
+          }
+        }
+      }
       
+      updatePixels(pixelGrid, mouseVisitedAreas, totalGrids, canvasWidth, canvasHeight);
+    });
+    
+    // 重置功能 - 当用户点击画布时，像素回到原始随机位置
+    canvas.addEventListener('click', function() {
+      mouseVisitedAreas.clear();
+      
+      pixelGrid.forEach(pixel => {
+        pixel.style.left = `${pixel.originalX}px`;
+        pixel.style.top = `${pixel.originalY}px`;
+        pixel.style.opacity = Math.random() * 0.5 + 0.3;
+        
+        const colorIndex = Math.floor(Math.random() * colors.length);
+        pixel.style.backgroundColor = colors[colorIndex];
+      });
+    });
+    
+    // 更新像素位置和样式的函数
+    function updatePixels(pixelGrid, mouseVisitedAreas, totalGrids, canvasWidth, canvasHeight) {
       // 计算已访问区域的比例
       const visitedRatio = mouseVisitedAreas.size / totalGrids;
       
       pixelGrid.forEach(pixel => {
         // 根据鼠标访问区域的比例，逐渐向目标位置移动
-        const progress = Math.min(1, visitedRatio * 3); // 当访问1/3的区域时，完全形成方程
+        const progress = Math.min(1, visitedRatio * 2.5); // 当访问40%的区域时，完全形成方程
         
         // 计算当前位置（从原始位置向目标位置过渡）
         const currentX = pixel.originalX + (pixel.targetX - pixel.originalX) * progress;
@@ -771,20 +800,6 @@ title: 首页
           pixel.style.backgroundColor = '#000';
         }
       });
-    });
-    
-    // 重置功能 - 当用户点击画布时，像素回到原始随机位置
-    canvas.addEventListener('click', function() {
-      mouseVisitedAreas.clear();
-      
-      pixelGrid.forEach(pixel => {
-        pixel.style.left = `${pixel.originalX}px`;
-        pixel.style.top = `${pixel.originalY}px`;
-        pixel.style.opacity = Math.random() * 0.5 + 0.3;
-        
-        const colorIndex = Math.floor(Math.random() * colors.length);
-        pixel.style.backgroundColor = colors[colorIndex];
-      });
-    });
+    }
   }
 </script> 
