@@ -7,7 +7,7 @@ title: 首页
   <div class="pixel-owl"></div>
 </div>
 
-<div class="interactive-pixel-area">
+<div class="interactive-pixel-area" style="display: none;">
   <div class="pixel-canvas" id="pixelCanvas"></div>
 </div>
 
@@ -219,19 +219,20 @@ title: 首页
   
   .pixel-owl {
     position: absolute;
-    width: 80px;
-    height: 80px;
+    width: 120px;
+    height: 120px;
     background-image: url("{{ '/assets/images/owl.png' | relative_url }}");
     background-size: contain;
     background-repeat: no-repeat;
+    background-position: center;
     top: 50%;
     transform: translateY(-50%);
-    left: -100px;
+    left: -150px;
     animation: flyAcross 3s ease-in-out forwards;
   }
   
   @keyframes flyAcross {
-    0% { left: -100px; transform: translateY(-50%) rotate(0deg); }
+    0% { left: -150px; transform: translateY(-50%) rotate(0deg); }
     10% { transform: translateY(-50%) rotate(5deg); }
     20% { transform: translateY(-50%) rotate(-5deg); }
     30% { transform: translateY(-50%) rotate(5deg); }
@@ -241,7 +242,7 @@ title: 首页
     70% { transform: translateY(-50%) rotate(5deg); }
     80% { transform: translateY(-50%) rotate(-5deg); }
     90% { transform: translateY(-50%) rotate(5deg); }
-    100% { left: calc(100% + 100px); transform: translateY(-50%) rotate(0deg); }
+    100% { left: calc(100% + 150px); transform: translateY(-50%) rotate(0deg); }
   }
   
   @keyframes fadeOut {
