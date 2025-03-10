@@ -1,0 +1,10 @@
+<nav class="nav-container">
+    <h2>目录</h2>
+    <ul>
+        {% for section in page.sections %}
+        <li>
+            <a href="#{{ section.id }}">{{ section.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</nav> 
