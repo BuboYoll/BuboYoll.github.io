@@ -3,7 +3,7 @@
     <div class="footer-content">
       <div class="footer-col">
         <h2 class="footer-heading">{{ site.title }}</h2>
-        <p>{{ site.description }}</p>
+        <p>一个极简风格的个人网站</p>
       </div>
       
       <div class="footer-col">
@@ -11,7 +11,6 @@
         <ul class="footer-links">
           <li><a href="{{ '/' | relative_url }}">首页</a></li>
           <li><a href="{{ '/about' | relative_url }}">关于我</a></li>
-          <li><a href="{{ '/blog' | relative_url }}">博客</a></li>
         </ul>
       </div>
       
@@ -20,23 +19,26 @@
         <ul class="footer-links">
           {% if site.social_links.github %}
             <li><a href="https://github.com/{{ site.social_links.github }}" target="_blank">GitHub</a></li>
+          {% else %}
+            <li><a href="https://github.com/BuboYoll" target="_blank">GitHub</a></li>
           {% endif %}
-          <li><a href="mailto:your.email@example.com">邮箱</a></li>
+          <li><a href="mailto:example@example.com">邮箱</a></li>
         </ul>
       </div>
     </div>
     
     <div class="footer-bottom">
-      <p>&copy; {{ site.time | date: '%Y' }} {{ site.title }}. 保留所有权利。</p>
+      <p>&copy; {{ site.time | date: '%Y' }} {{ site.title | default: "冯菁源的个人网站" }}. 保留所有权利。</p>
     </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    padding: 50px 0 20px;
+    padding: 40px 0 20px;
     background-color: #fafafa;
     border-top: 1px solid #eee;
+    font-family: 'Charter', 'Bitstream Charter', 'Sitka Text', Cambria, serif;
   }
   
   .footer-content {
@@ -44,6 +46,9 @@
     flex-wrap: wrap;
     justify-content: space-between;
     margin-bottom: 30px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   .footer-col {
@@ -56,6 +61,9 @@
   .footer-heading {
     font-size: 1.2em;
     margin-bottom: 15px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
   
   .footer-links {
@@ -69,9 +77,10 @@
   }
   
   .footer-links a {
-    color: #000;
+    color: rgba(0, 0, 0, 0.84);
     text-decoration: none;
     position: relative;
+    font-size: 16px;
   }
   
   .footer-links a:after {
@@ -81,7 +90,7 @@
     height: 1px;
     bottom: 0;
     left: 0;
-    background-color: #000;
+    background-color: rgba(0, 0, 0, 0.84);
     transition: width 0.3s ease;
   }
   
@@ -94,16 +103,24 @@
     border-top: 1px solid #eee;
     text-align: center;
     font-size: 0.9em;
-    color: #666;
+    color: rgba(0, 0, 0, 0.54);
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
   }
   
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     .footer-content {
       flex-direction: column;
+      padding: 0 20px;
     }
     
     .footer-col {
       padding-right: 0;
+    }
+    
+    .site-footer {
+      padding: 30px 0 15px;
     }
   }
 </style> 

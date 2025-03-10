@@ -1,4 +1,5 @@
 @import "minima";
+@import "{{ site.theme }}";
 
 // 颜色变量
 $primary-color: #000000;
@@ -559,5 +560,64 @@ body {
   
   .timeline-item:before {
     left: -30px;
+  }
+}
+
+// 文章导航栏样式
+.toc {
+  position: fixed;
+  left: 20px;
+  top: 100px;
+  width: 250px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.toc ul {
+  list-style: none;
+  padding-left: 15px;
+}
+
+.toc li {
+  margin: 8px 0;
+}
+
+.toc a {
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s;
+  
+  &:hover {
+    color: #0366d6;
+  }
+}
+
+// 文章内容样式
+.post-content {
+  font-size: medium;
+  margin-left: 300px; // 为左侧导航栏留出空间
+  
+  @media (max-width: 1200px) {
+    margin-left: 0;
+  }
+}
+
+// 响应式设计
+@media (max-width: 1200px) {
+  .toc {
+    display: none;
+  }
+}
+
+// AI Daily 分类样式
+.post-category {
+  &[data-category="AI Daily"] {
+    background-color: #e1f5fe;
+    color: #0288d1;
   }
 } 
