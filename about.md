@@ -18,15 +18,21 @@ My name is Feng Jingyuan, I am currently pursuing a Master's degree in Artificia
 - [Mechanistic Interpretatbility](https://dynalist.io/d/n2ZWtnoYHrU1s4vnFSAQ519J) of large language models.
 
 - Statistical Physics in machine learning and deep learning.
-    - 
 
 ### Projects
 
 I am doing some projects.
 
+- Mechanistic Interpretability of language models, including problems like
+
+    - How does transformer __use__ features? 
+    - Transformer from a memory viewpoint
+
 ### Hobbies 
 
-music
+- Blues music: Harmonica
+- Coffee: Self-made hand-drip coffee
+- Hiking
 
 
 
