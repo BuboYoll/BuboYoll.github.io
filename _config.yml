@@ -56,6 +56,8 @@ defaults:
     values:
       layout: post # Default layout
 
+markdown: kramdown
+
 # 7. Site settings
 encoding: utf-8 # Make sure the encoding is right
 title: "Garth" # Site name or title
