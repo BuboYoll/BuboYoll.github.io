@@ -49,11 +49,10 @@
 		- \_\_Residual stream\_\_: Non-priviledge basis. Say activation in residual stream is $x\rightarrow Rx$, then for QKV matrices $W\_{Q,K,V}\rightarrow W\_{QKV}R^{-1}$
 		- \_\_MLP activations\_\_: Priviledge basis. $\text{MLP}(x)=W\_{2}\sigma(W\_1x)$, rotating $x\_1$ would not be able to recover by any method, so it is meaningful.
 - Linear representation hypothesis
-	- ![[Pasted image 20250606201628.png]]
+	- Hidden representation could be represented as $x = \sum_{i=1}^{d_{\text{dictionary}}}\mathbf{v}_{i} f_{i}$, where $f_i$ is the so-called **feature**, and this induce that we hypothesize features are **one-dimensional**, which may [not turn](https://openreview.net/forum?id=d63a4AM4hb) out to be the case. 
 		- in this way the superposition may disappear, since the dictionary is sparse, and it could be though of a *decoder* of sparse auto encoder.
-		- each $\boldsymbol{D}\_i$ in the dictionary is a feature, $\boldsymbol{D}$ is the feature dictionary. In $n$ dimensinal space, number of basis satisfu (ii) is ~$\exp(n)$
+		- each $\mathbf{D}\_i$ in the dictionary is a feature, $\mathbf{D}$ is the feature dictionary. In $n$ dimensinal space, number of basis satisfu (ii) is ~$\exp(n)$
 		- See [blog](https://www.lesswrong.com/posts/Qryk6FqjtZk9FHHJR/sparse-autoencoders-find-highly-interpretable-directions-in).
-		- ![[Pasted image 20250609152447.png]]
 	- **From a encoder point of view**
 		- $z=Ex$ , where they are in $\mathbb{R}^{p},\mathbb{R}^{p\times m}, \mathbb{R}^{m}$. $E=(e\_1,...,e\_m), e\_1\in \mathbb{R}^{p}$ and $x\_i$ is the coefficient of each $e\_i$. Intuitively, encoder makes the 
 	- **From antropic**
