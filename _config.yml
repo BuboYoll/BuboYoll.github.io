@@ -56,13 +56,15 @@ defaults:
     values:
       layout: post # Default layout
 
-
 # Markdown Processing
 kramdown:
   input: GFM
   syntax_highlighter: rouge
-  # 告诉 kramdown 使用 MathJax 来处理数学公式
+  # MathJax configuration for kramdown
   math_engine: mathjax
+  math_engine_opts:
+    preview: true
+    preview_as_code: false
 
 # 7. Site settings
 encoding: utf-8 # Make sure the encoding is right
