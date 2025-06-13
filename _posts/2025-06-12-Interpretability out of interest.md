@@ -1,3 +1,5 @@
+# ML
+
 - PCA
 	- Motivation: in real-world experiment, we have a bunch of observation, which might be **redundant** and **full of noise**
 		- Redundant means sometimes we do observation essentially repeatedly, i.e., with high covariance
@@ -16,7 +18,8 @@
 		- This is done by letting $P$ be the eigenvector matrix of $C\_X$
 		- $C\_Y=\frac{1}{n}yy^T=\frac{1}{n}Pxx^TP^T=\frac{1}{n}PC\_XP^T=\frac{1}{n}PP^{-1}\Lambda PP^T=\frac{1}{n}\Lambda$, where each row vector of $P$ is eigenvector of $C\_X$, and $\Lambda$ is the corresponding eigenvalue.
 	- Step4: according to 3, we are using the eigenvalues of $C\_X$ as basis, which is so called **principal components**, and the $i-th$ principal component have variance of $\Lambda(i,i)$
-## LLM
+
+# LLM
 
 - Word2Vec: *For words shown in similar context, it should be assigned similar meanings, e.g., token embedding.* 
 	- Idea: learn the following embedding for each words in corpus.
@@ -57,13 +60,14 @@
 		- *claim1*: each *feature* $f\_i$ is represented as a direction (**in other words, feature is one-dimensinal**) in the representation space inside MLP.
 		- *claim2*: the combination coefficient is determined by the input $c\_i=g(x,f\_i)$, some says that this intensity $g$ would be a *linear function* of embedding $x$
 		- In this way, the input could be mapped into a vector in representation space $\sum\_{i=1}^{n\_{d\_{hidden}}}c\_if\_i$
-- 
-## Statistics
+
 - Likelihood: *try to use some parameters to model the ground true distribution*.
 	- Maximum likelihood estimation: when given observations sampled from distribution $p(x)$, estimate the parameters of the model $q\_{\theta}(x)$, s.t. the observation is the most likely to occur (try to recover the observation with $q\_{\theta}$)
 		- Example: estimate the probability of getting head, when tossed 10 times a coin with (head:5, tail:4) would be 5/9. With parameterized model, $p\_\theta(\text{head})=\theta$, setting derivative to zero would raise the answer.
 
-## Deep learning
+# Deep learning
+
+
 - Regularization
 	- Dropout: randomly throw away some neurons in each layer when training, and scale the output by the retention rate.
 		- **Interpretation**: learn the weights that does not depend on single neuron.
