@@ -25,7 +25,7 @@
 	- Idea: learn the following embedding for each words in corpus.
 		- context embedding
 		- token embedding
-	- Formula(given previous word wj, the likelihood of next token is wi): $t\_i, c\_j = \arg\max\_{t\_i, c\_j}p(w\_i|w\_j)$
+	- Formula(given previous word wj, the likelihood of next token is wi) $t\_i, c\_j = \arg\max\_{t\_i, c\_j}p(w\_i\mid w\_j)$
 	- Understanding phrases: addition: for example, Russia + river ~ Moscow
 	- The magnitute of the embedding, is related to the strength of meaning. For example, magnitute of “apple” is larger than “this”.
 - Feature
@@ -38,7 +38,7 @@
 	- Different kinds of neurons have been found in NNs
 		- **Sentiment neurons** in LSTM (Found by statistics, run a lot of postive/negetive sentimental sentences, and see the histagram: count vs activation value, is *seperated*) (Learning to Generate Reviews and Discovering Sentiment)
 		- **Knowledge neurons** in **MLP**: for input matrix $W\_{in}\in \mathbb{R}^{ d\_{\text{model}}\times 4d\_{\text{model}}}$, each column vector is **key vector**, take inner product with input vector to have **activation**, and then weighted sum the **value vector**, which is row vector in $W\_{in}\in \mathbb{R}^{ 4d\_{\text{model}}\times d\_{\text{model}}}$. 
-			- the way of finding the knowledge neuron is to see, **how much does the probability of  output being the desired memory changes w.r.t. the activation, and accumulate it** $w\_{i}\int\_{0}^{1}\frac{d P(\text{memory}|x, \alpha\times w\_i)}{d \alpha}d\alpha$
+			- the way of finding the knowledge neuron is to see, **how much does the probability of  output being the desired memory changes w.r.t. the activation, and accumulate it** $w\_{i}\int\_{0}^{1}\frac{d P(\text{memory} \mid x, \alpha\times w\_i)}{d \alpha}d\alpha$
 	- As layer goes deeper, the **answer** become closer to the target. By distribution, we means that representation in different residual stream is distribution over vocabulary, and different blocks are just modifying this distribution. The distribution could be read by applying the $W\_{\text{unembed}}\in \mathbb{R}^{d\_{\text{model}}\times d\_{\text{vocab}}}$
 - Superposition
 	- Neural networks learn *features* more than their *neurons*, so *some neurons* is *multi-semantic*. Or, they are trying to mimic a larger models, in which neurons is more than features.
@@ -72,12 +72,12 @@
 	- Dropout: randomly throw away some neurons in each layer when training, and scale the output by the retention rate.
 		- **Interpretation**: learn the weights that does not depend on single neuron.
 	- weight-decay
-	- Flooding: let the loss be $|J\_{\theta}-b|+b$ to prevent it from being zero during training.
+	- Flooding: let the loss be $\mid J\_{\theta}-b \mid +b$ to prevent it from being zero during training.
 	- Early stopping: two ways of implementing
 		- Set a epoch number as *hyperparameter*. At each epoch, evaluate on valid set. If is so far the best, save the model; else continue.
 		- Or, at each epoch, check if the evaluation on valid set is worsen. If for the next **some epochs** the performance is worsen then stop.
 - Loss function
-	- Cross entropy: a measure of difference between distribution $H(p,q\_{\theta})=H(p)-KL(p||q\_{\theta})=-\sum\_{x\in \text{feature space}}p(x)\log q\_{\theta}(x)$, where $p(x), q\_{\theta}(x)$ is the ground true and model's predict distribution over labels.
+	- Cross entropy: a measure of difference between distribution $H(p,q\_{\theta})=H(p)-KL(p\mid \mid q\_{\theta})=-\sum\_{x\in \text{feature space}}p(x)\log q\_{\theta}(x)$, where $p(x), q\_{\theta}(x)$ is the ground true and model's predict distribution over labels.
 		- Entropy: the expectation of self-information
 			- Self information: *map* a distribution to a *real number* $I(p)=-\log p(x)$. Measures the *surpisal* of an event.
 			- Mutual information: *map* 2 distribution to a *real number* $I(p,q)=-\mathbb{E}\_{p\_{XY}}[\frac{p\_{X,Y}(x,y)}{p\_X(x)p\_Y(y)}]$ . If they are independent, its 0. If they are the same random variable, its self information.
