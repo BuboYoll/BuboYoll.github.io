@@ -45,7 +45,7 @@
 		- **except for some important features**, most features share basis, therefore the activation of a neuron is hard to interpret with single feature. 
 		- **or** all features do not have dedicated basis.
 	- Privilege basis vs non-privilege basis: whether talking about activation is meaningful. If the activation is in non-priviledge basis, the **value** of neuron is meaningless, since it could be **arbitrarily rotated by $R$**.
-		- **Attention output**: Non-priviledge basis. $r_j=\sum_{i}\text{attn}_{ij}v_{i}$ is projected into residual stream by $W_{o}r_j=W_{o}R^{-1}Rr_j$. 
+		- **Attention output**: Non-priviledge basis. $r_{j}=\sum_{i}\text{attn}_{ij}v_{i}$ is projected into residual stream by $W_{o} r_{j}=W_{o}R^{-1}R r_{j}$. 
 		- **Residual stream**: Non-priviledge basis. Say activation in residual stream is $x\rightarrow Rx$, then for QKV matrices $W_{Q,K,V}\rightarrow W_{QKV}R^{-1}$
 		- **MLP activations**: Priviledge basis. $\text{MLP}(x)=W_{2}\sigma(W_1x)$, rotating $x_1$ would not be able to recover by any method, so it is meaningful.
 - Linear representation hypothesis
@@ -79,7 +79,7 @@
 	- Cross entropy: a measure of difference between distribution $H(p,q_{\theta})=H(p)-KL(p\mid \mid q_{\theta})=-\sum_{x\in \text{feature space}}p(x)\log q_{\theta}(x)$, where $p(x), q_{\theta}(x)$ is the ground true and model's predict distribution over labels.
 		- Entropy: the expectation of self-information
 			- Self information: *map* a distribution to a *real number* $I(p)=-\log p(x)$. Measures the *surpisal* of an event.
-			- Mutual information: *map* 2 distribution to a *real number* $I(p,q)=-\mathbb{E}_{p_{XY}}[\frac{p_{X,Y}(x,y)}{p_X(x)p_Y(y)}]$ . If they are independent, its 0. If they are the same random variable, its self information.
+			- Mutual information: *map* 2 distribution to a *real number* $I(p,q)=-\mathbb{E}_{p_{XY}}\left[\frac{p_{X,Y}(x,y)}{p_X(x)p_Y(y)}\right]$ . If they are independent, its 0. If they are the same random variable, its self information.
 			- Entropy: $\mathbb{E}_{p}[I(p)]$
 			- Relation the maximize log-likelihood: the likelihood given observation from i to n is $L(\theta, X)=\prod_{i}q_{\theta}(X=x_i)=\prod_{x_i}q_{\theta}(x_i)^{Np(x_i)}$, so the log likelihood: $l(\theta)=\sum_{x_i}Np(x_i)\log q_{\theta}(x_i)=-NH(p, q_\theta)$. **Hence MLE =Minimize cross entropy**
 - Training dynamics
