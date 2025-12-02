@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizing model's thought via dimension reduction algorithms</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html" class="active">Blog</a></li>
+            <li><a href="../pub/index.html">Pub</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <article class="post-content">
+            <a class="back-btn" href="index.html">← Back to Blog</a>
+
+            <h1>Visualizing model's thought</h1>
+            <p class="meta">2025.7.10</p>
+
+            <h2>Hypothesis</h2>
+            <p>for classification tasks performed by in-context learning, model  performs by assigning inputs belongs to different labels onto distinct, different manifolds to form clusters.</p>
+
+            <p>Task setting: a simple classification task with 10 labels. </p>
+
+            <p style="text-align: center; font-size: 1.2rem;">
+                $$\text{Label}(x) = \text{alphabet}(x \; \text{mod} \; 10)$$
+            </p>
+            <p>where $x$ is an integer input, and $\\text{alphabet}(n)$ returns the n-th letter in English alphabet. For example, $1:A, 11:A, 2:B, 22:B, ...$</p>
+
+            <h2>Visualizing the hidden state of model</h2>
+            <p>The context is : <strong>"1:A, ..., 101:A, 2:B, ..., 102:B, 3:C, ..., 103:C, 111:"</strong >. </p>
+            <p>I extract the hidden state of layer 1, 14, 32 for meta llama3-8b for number tokens, and perform t-SNE on them to visualize:</p>
+            <div class="image-gallery">
+                <figure>
+                    <img src="../assets/images/icl_2.png" alt="t-SNE visualization of hidden states at different layers">
+                    <figcaption>Layer 1: the representation learned from pre-train. Tokens like "1, 2, 3, 4" and "11, 12, 13, 14" are close to each other, see sticks in the figure.</figcaption>
+                </figure>
+                <figure>
+                    <img src="../assets/images/icl_1.png" alt="t-SNE visualization of hidden states at different layers">
+                    <figcaption>Layer 14: model is trying to seperate the numbers by their label, but still competing against the pre-train representation. </figcaption>
+                </figure>
+                <figure>
+                    <img src="../assets/images/icl_3.png" alt="t-SNE visualization of hidden states at different layers">
+                    <figcaption>Layer 32: different clusters are formed, indicating that the model has successfully separated the representations of different labels.</figcaption>
+                </figure>
+            </div>
+            <p>
+                As we can see, at the very first layer, the representations of different labels are mixed together. As we go deeper into the network, the model gradually separates the representations of different labels, forming distinct clusters by the final layer. This suggests that the model is indeed organizing the input data into separate manifolds corresponding to each label, supporting our hypothesis.
+            </p>
+            <h2>How much is the clusters separated?</h2>
+            <p>One may be able to solve the problem with one-dimensional non-linear representation. Let's check the <em>effective dimension</em> of model's representation. </p>
+
+            <p style="text-align: center; font-size: 1.2rem;">
+                $$\alpha = \frac{\left(\sum_{i}\sigma_{i}^{2}\right)^{2}}{\sum_{i}\sigma_{i}^{4}},\quad\mathrm{where}~X=U\Sigma V^{T}, \sigma_i \;\text{is the i-th singular value}$$
+            </p>
+
+            <p>Let's see how the effective dimension changes across layers</p>
+            <div class="container-flex">
+                <img src="../assets/images/eff_dim.png" alt="Effective Dimension Across Layers" class="centered-image-flex">
+            </div>
+            <p>The effective dimension is about 1.4, which meets with the intuition that the problem should be solved with one dimension representation. </p>
+            <p>Is the representation linear separable? Let's figure out:</p>
+            <p style="text-align: center; font-size: 1.2rem;">
+                $$S^{\star}(A):=\operatorname*{sup}_{\|u \|=1}\frac{1}{n}\left[\sum_{i\in A}\mathbb{I}(u^{T}h^{(i)}>0)+\sum_{i\ne A}\mathbb{I}(u^{T}h^{(i)})\right]
+                $$
+            </p>
+            <p>The separability in the 2 dimensional-space should be large, according to the effective dimension we had before. Let's check it by first project the representation on the first 2 right- singular vectors</p>
+            <p style="text-align: center; font-size: 1.2rem;">
+                $$h^{(i)} = (x^{(i)} \cdot v_1, \; x^{(i)} \cdot v_2)$$
+            </p>
+            <p>And plot the average separability score between clusters</p>
+            <div class="container-flex">
+                <img src="../assets/images/sep.png" alt="Separability Score Between Clusters" class="centered-image-flex">
+            </div>
+            <p>The figure clearly demonstrate that the representation projected to the first two right singular vectors has a high separability score, indicating that the clusters are well-separated, which meets with the hypothesis.</p>
+            <h2>Other visualization</h2>
+            <p>Here are some other visualizations. For example, how does model represent 7 days in a week, or words discribing size like "big", "small"?</p>
+            <figure style="max-width: 500px; margin: 1rem auto; text-align: center;">
+                <img src="../assets/images/weekdays.png" alt="7 days in a week arranged in a circle" style="width: 100%;">
+                <figcaption>7 days in a week arranged in a circle</figcaption>
+            </figure>
+            <figure style="max-width: 500px; margin: 1rem auto; text-align: center;">
+                <img src="../assets/images/size.png" alt="Words describing size arranged by their meanings" style="width: 70%;">
+                <figcaption>Words describing size arranged by their meanings</figcaption>
+            </figure>
+            <p>The above visualization shows that, model can learn the geometry of semantics, or in-context. If one thinks about the relationships between words, it becomes clear that the model is capturing not just the meanings of individual words, but also their contextual relationships.</p>
+            <h2>References</h2>
+            <ol>
+                <li><a href="https://openreview.net/pdf?id=pXlmOmlHJZ">ICLR: IN-CONTEXT LEARNING OF REPRESENTATIONS</a></li>
+                <li><a href="https://openreview.net/pdf?id=CqViN4dQJk">LANGUAGE MODELS USE TRIGONOMETRY TO DO ADDITION</a></li>
+            </ol>
+        </article>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 My Website. Built with vanilla JavaScript.</p>
+    </footer>
+</body>
+</html>

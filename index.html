@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feng Jingyuan</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Typewriter cursor style */
+        .typewriter-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background-color: #EDA969;
+            margin-left: 2px;
+            vertical-align: text-bottom;
+            animation: blink 0.7s infinite;
+        }
+        .typewriter-cursor.typing {
+            animation: none;
+        }
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="blog/index.html">Blog</a></li>
+            <li><a href="pub/index.html">Pub</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <h1><span id="typewriter"></span><span class="typewriter-cursor"></span></h1>
+            <p><em>University of Tokyo, Matsuo Lab, Master's Student 1st Year</em></p>
+        </section>
+
+        <section class="intro">
+            <h2>About me</h2>
+            <p>Welcome to my personal website! <br>
+                Name: Feng Jingyuan (フウ  セイゲン) <br>
+                Affiliation: <a href="https://weblab.t.u-tokyo.ac.jp/en/">University of Tokyo</a>, Matsuo Lab, M1 <br>
+                Research interests: mechanistic interpretability in LLM, bayesian-inference, statistical learning theory, generative models. <br>
+            </p>
+            <h3>Experience</h3>
+            <ul>
+                <li><a href="https://en.wikipedia.org/wiki/Sun_Yat-sen_University">Sun Yat-sen University</a>, Physics, Ising model, Spin glass, Hopfield model. <em>2020.04~2024.07</em></li>
+                <li>Member of <a href="https://en.innoxsz.com/">Shenzhen InnoX</a>, a Innovative Academy Found by Prof.Zexiang LI, co-founder of <a href="https://www.dji.com/">DJI</a>. <em>2024.08~2025.03</em></li>
+                <li>University of Tokyo, Matsuo Lab. <em>2025.04~Present</em></li>
+                <li>AI research intern, NEDO & Matsuo Lab. <em>2025.07~2025.11</em></li>
+            </ul>
+            <h3 style="margin-top: 1.5rem;">Interest</h3>
+            <ul>
+                <li>Artificial Intelligence and Coding</li>
+                <li>Bicycles</li>
+                <li>Blues music, Harmonica.</li>
+            </ul>
+
+            <h3 style="margin-top: 1.5rem;">Quick Navigation</h3>
+            <p>
+                <a href="" style="margin-right: 1rem;">View Blog</a>
+                <a href="pub/index.html">View Publications</a>
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <em>2025 Feng Jingyuan. Built with css and JavaScript.</em></p>
+    </footer>
+
+    <script>
+        // Typewriter effect
+        const typewriterElement = document.getElementById('typewriter');
+        const cursorElement = document.querySelector('.typewriter-cursor');
+
+        const texts = ['A researcher', 'A student', 'Feng Jingyuan'];
+        const typeSpeed = 100;      // Typing speed (ms per character)
+        const deleteSpeed = 50;     // Deleting speed (ms per character)
+        const pauseTime = 2000;     // Pause time after typing (ms)
+
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typewriter() {
+            const currentText = texts[textIndex];
+            const isLastText = textIndex === texts.length - 1;
+
+            // Add 'typing' class to stop cursor blinking while typing
+            cursorElement.classList.add('typing');
+
+            if (!isDeleting) {
+                // Typing
+                typewriterElement.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+
+                if (charIndex === currentText.length) {
+                    // Finished typing current text
+                    cursorElement.classList.remove('typing');
+
+                    if (isLastText) {
+                        // Last text - stop here
+                        return;
+                    }
+
+                    // Wait, then start deleting
+                    setTimeout(() => {
+                        isDeleting = true;
+                        typewriter();
+                    }, pauseTime);
+                    return;
+                }
+
+                setTimeout(typewriter, typeSpeed);
+            } else {
+                // Deleting
+                typewriterElement.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+
+                if (charIndex === 0) {
+                    // Finished deleting
+                    isDeleting = false;
+                    textIndex++;
+                    setTimeout(typewriter, 500); // Short pause before next text
+                    return;
+                }
+
+                setTimeout(typewriter, deleteSpeed);
+            }
+        }
+
+        // Start the typewriter effect
+        typewriter();
+    </script>
+</body>
+</html>

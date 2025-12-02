@@ -1,0 +1,430 @@
+/* Google Fonts - EB Garamond */
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+/* 基础样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Black background + Amber theme */
+    --bg-color: #0d0d0d;
+    --card-bg: #1a1a1a;
+    --text-color: #EDA969;          /* Amber */
+    --text-secondary: #b8844d;      /* Dark amber */
+    --accent-color: #EDA969;        /* Amber (highlight) */
+    --border-color: #2a2a2a;
+    --nav-bg: #111111;
+}
+
+body {
+    font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 1.2rem;
+    line-height: 1.9;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+}
+
+/* 导航栏 */
+nav {
+    background-color: var(--nav-bg);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border-color);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+nav a:hover {
+    color: var(--accent-color);
+}
+
+nav a.active {
+    color: var(--accent-color);
+    background-color: rgba(245, 197, 99, 0.1);
+}
+
+/* 主内容区 */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: calc(100vh - 200px);
+}
+
+/* Hero 区域 */
+.hero {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, #1a1a1a, #252525);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+}
+
+.hero p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* 介绍区域 */
+.intro {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.intro h2 {
+    font-size: 1.8rem;
+    margin-top: 2rem;
+    margin-bottom: 1.2rem;
+    color: var(--accent-color);
+}
+
+.intro h3 {
+    font-size: 1.4rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+}
+
+.intro p {
+    margin-bottom: 1.5rem;
+}
+
+.intro ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.intro li {
+    margin-bottom: 0.6rem;
+}
+
+.intro a {
+    color: var(--accent-color);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    transition: color 0.2s, text-decoration-color 0.2s;
+}
+
+.intro a:hover {
+    color: #fff;
+    text-decoration-style: solid;
+}
+
+/* 文章列表 */
+.post-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.post-card {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s, border-color 0.3s;
+    display: flex;
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+.post-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--text-secondary);
+}
+
+.post-card .post-info {
+    flex: 1;
+}
+
+.post-card .post-image {
+    width: 200px;
+    min-height: 150px;
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.post-card .post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.post-card h3 {
+    margin-bottom: 0.5rem;
+}
+
+.post-card h3 a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.post-card h3 a:hover {
+    text-decoration: underline;
+}
+
+.post-card .date {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.post-card .excerpt {
+    color: var(--text-color);
+}
+
+/* 文章内容 */
+.post-content {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.post-content h1 {
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+}
+
+.post-content .meta {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin: 1rem 0;
+    border: 1px solid var(--border-color);
+}
+
+.container-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 10vh;
+  max-width: 500px; /* 容器最大宽度 */
+  margin: 0 auto; /* 容器居中 */
+}
+
+.image-gallery {
+  display: flex; /* 使用Flexbox布局 */
+  justify-content: space-between; /* 在项目之间分配空间，使两边图片与页面左右间距相同 */
+  align-items: flex-start; /* 或者 center, 根据caption的高度调整，使顶部对齐 */
+  max-width: 1200px; /* 限制图库的最大宽度，可根据需要调整 */
+  margin: 0 auto; /* 使整个图库在页面中居中 */
+  padding: 0 20px; /* 左右内边距，确保图片不会紧贴浏览器边缘 */
+}
+
+.image-gallery figure {
+  flex: 0 1 30%; /* 每个图片占据大约30%的宽度，留出空间用于间隔 */
+  margin: 0; /* 重置figure的默认外边距 */
+  text-align: center; /* 标题居中 */
+  box-sizing: border-box; /* 包含padding和border在宽度内 */
+}
+
+.image-gallery img {
+  width: 100%; /* 图片宽度填充其父容器figure */
+  height: 350px; /* 固定图片高度，所有图片将变为同样尺寸 */
+  display: block; /* 移除图片底部可能存在的额外空间 */
+}
+
+.image-gallery figcaption {
+  margin-top: 10px; /* 标题与图片之间的间距 */
+  font-size: 0.9em;
+  color: #b8844d; /* 使用次要文本颜色 */
+}
+
+/* 针对小屏幕设备的响应式调整 (可选) */
+@media (max-width: 768px) {
+  .image-gallery {
+    flex-direction: column; /* 在小屏幕上垂直堆叠图片 */
+    align-items: center; /* 垂直堆叠时居中对齐 */
+  }
+
+  .image-gallery figure {
+    width: 90%; /* 小屏幕上图片占据大部分宽度 */
+    margin-bottom: 20px; /* 垂直堆叠时图片之间的间距 */
+  }
+}
+
+.post-content p {
+    margin-bottom: 1rem;
+}
+
+.post-content h2,
+.post-content h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+}
+
+.post-content ul,
+.post-content ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.post-content li {
+    margin-bottom: 0.5rem;
+}
+
+/* 代码块 */
+.post-content pre {
+    background: #0a0a0a;
+    color: var(--accent-color);
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid var(--border-color);
+}
+
+.post-content code {
+    font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 0.9rem;
+}
+
+/* 页脚 */
+footer {
+    background-color: var(--nav-bg);
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid var(--border-color);
+}
+
+footer a {
+    color: var(--accent-color);
+}
+
+/* 出版物页面 */
+.pub-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.pub-item {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--accent-color);
+}
+
+.pub-item h3 {
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+}
+
+.pub-item .authors {
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: 0.5rem;
+}
+
+.pub-item .venue {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.pub-item a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.pub-item a:hover {
+    text-decoration: underline;
+}
+
+/* 返回按钮 */
+.back-btn {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.back-btn:hover {
+    text-decoration: underline;
+}
+
+/* 按钮样式 */
+button {
+    background: var(--card-bg);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background: rgba(245, 197, 99, 0.1);
+}
+
+/* 输入框样式 */
+input[type="text"] {
+    background: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    nav ul {
+        gap: 1rem;
+    }
+
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    main {
+        padding: 1rem;
+    }
+}
