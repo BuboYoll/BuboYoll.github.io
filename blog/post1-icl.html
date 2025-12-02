@@ -32,18 +32,18 @@
             <p class="meta">2025.7.10</p>
 
             <h2>Hypothesis</h2>
-            <p>for classification tasks performed by in-context learning, model  performs by assigning inputs belongs to different labels onto distinct, different manifolds to form clusters.</p>
+            <p>for classification tasks performed by in-context learning, model assign inputs belongs to different labels onto <em>distinct, different manifolds</em> to form clusters.</p>
 
-            <p>Task setting: a simple classification task with 10 labels. </p>
+            <p><strong>Task setting:</strong> a simple classification task with 10 labels. </p>
 
-            <p style="text-align: center; font-size: 1.2rem;">
+            <p style="text-align: center; font-size: 1.5rem;">
                 $$\text{Label}(x) = \text{alphabet}(x \; \text{mod} \; 10)$$
             </p>
-            <p>where $x$ is an integer input, and $\\text{alphabet}(n)$ returns the n-th letter in English alphabet. For example, $1:A, 11:A, 2:B, 22:B, ...$</p>
+            <p>where $x$ is an integer input, and $\text{alphabet}(n)$ returns the n-th letter in English alphabet. For example, $1:A, 11:A, 2:B,  22:B, ...$</p>
 
             <h2>Visualizing the hidden state of model</h2>
-            <p>The context is : <strong>"1:A, ..., 101:A, 2:B, ..., 102:B, 3:C, ..., 103:C, 111:"</strong >. </p>
-            <p>I extract the hidden state of layer 1, 14, 32 for meta llama3-8b for number tokens, and perform t-SNE on them to visualize:</p>
+            <p>The context is : <strong>"1:A, ..., 101:A, 2:B, ..., 102:B, 3:C, ..., 103:C, 4:D, ..., 104:D, 111:"</strong >. </p>
+            <p>I extract the hidden state of all number tokens in layer 1, 14, 32 for meta llama3-8b, and perform t-SNE on them to visualize. <span style="color: #1f77b4;">Blue</span>, <span style="color: #ff7f0e;">orange</span>, <span style="color: #2ca02c;">green</span>, <span style="color: #d62728;">red</span> are numbers with label <span style="color: #1f77b4;">A</span>, <span style="color: #ff7f0e;">B</span>, <span style="color: #2ca02c;">C</span>, <span style="color: #d62728;">D</span>, that is, end with <span style="color: #1f77b4;">1</span>, <span style="color: #ff7f0e;">2</span>, <span style="color: #2ca02c;">3</span>, <span style="color: #d62728;">4</span>:</p>
             <div class="image-gallery">
                 <figure>
                     <img src="../assets/images/icl_2.png" alt="t-SNE visualization of hidden states at different layers">
@@ -59,12 +59,12 @@
                 </figure>
             </div>
             <p>
-                As we can see, at the very first layer, the representations of different labels are mixed together. As we go deeper into the network, the model gradually separates the representations of different labels, forming distinct clusters by the final layer. This suggests that the model is indeed organizing the input data into separate manifolds corresponding to each label, supporting our hypothesis.
+                As we can see, at the very first layer, the representations of different labels are mixed together. As we go deeper into the network, the model gradually separates the representations of different labels, forming distinct clusters by the final layer. This suggests that the model is organizing the input data into different clusters, supporting our hypothesis.
             </p>
             <h2>How much is the clusters separated?</h2>
-            <p>One may be able to solve the problem with one-dimensional non-linear representation. Let's check the <em>effective dimension</em> of model's representation. </p>
+            <p>One may solve the problem with one-dimensional non-linear representation. Let's check the <em>effective dimension</em> of model's representation. </p>
 
-            <p style="text-align: center; font-size: 1.2rem;">
+            <p style="text-align: center; font-size: 1.5rem;">
                 $$\alpha = \frac{\left(\sum_{i}\sigma_{i}^{2}\right)^{2}}{\sum_{i}\sigma_{i}^{4}},\quad\mathrm{where}~X=U\Sigma V^{T}, \sigma_i \;\text{is the i-th singular value}$$
             </p>
 
@@ -74,19 +74,19 @@
             </div>
             <p>The effective dimension is about 1.4, which meets with the intuition that the problem should be solved with one dimension representation. </p>
             <p>Is the representation linear separable? Let's figure out:</p>
-            <p style="text-align: center; font-size: 1.2rem;">
+            <p style="text-align: center; font-size: 1.5rem;">
                 $$S^{\star}(A):=\operatorname*{sup}_{\|u \|=1}\frac{1}{n}\left[\sum_{i\in A}\mathbb{I}(u^{T}h^{(i)}>0)+\sum_{i\ne A}\mathbb{I}(u^{T}h^{(i)})\right]
                 $$
             </p>
             <p>The separability in the 2 dimensional-space should be large, according to the effective dimension we had before. Let's check it by first project the representation on the first 2 right- singular vectors</p>
-            <p style="text-align: center; font-size: 1.2rem;">
+            <p style="text-align: center; font-size: 1.5rem;">
                 $$h^{(i)} = (x^{(i)} \cdot v_1, \; x^{(i)} \cdot v_2)$$
             </p>
-            <p>And plot the average separability score between clusters</p>
+            <p>And plot the average separability score $S^{\star}$ between clusters</p>
             <div class="container-flex">
                 <img src="../assets/images/sep.png" alt="Separability Score Between Clusters" class="centered-image-flex">
             </div>
-            <p>The figure clearly demonstrate that the representation projected to the first two right singular vectors has a high separability score, indicating that the clusters are well-separated, which meets with the hypothesis.</p>
+            <p>The figure clearly demonstrate that the representation projected to the first two right singular vectors has a high separability score, indicating that the clusters are well-separated, which meets with the hypothesis, and the model's perfect performance on the task.</p>
             <h2>Other visualization</h2>
             <p>Here are some other visualizations. For example, how does model represent 7 days in a week, or words discribing size like "big", "small"?</p>
             <figure style="max-width: 500px; margin: 1rem auto; text-align: center;">
@@ -98,6 +98,10 @@
                 <figcaption>Words describing size arranged by their meanings</figcaption>
             </figure>
             <p>The above visualization shows that, model can learn the geometry of semantics, or in-context. If one thinks about the relationships between words, it becomes clear that the model is capturing not just the meanings of individual words, but also their contextual relationships.</p>
+            <p>
+            The representation of language model is still quite mysterious. Back to 2023, <a href="https://arxiv.org/pdf/2311.03658"> linear representation hypothesis</a> was proposed. After that, researchers found that there are many non-linear representations, like circles, helix. Recently, some researcher proposed a new perspective of treating features, <a href="https://arxiv.org/abs/2505.18235">from a geometry perspective.</a> However, there is still a lot of definition on features in the field of mechanistic interpretability.
+            </p>
+            <p>This blog simply visualized some toy cases, aiming to let readers have an intuition about representations.</p>
             <h2>References</h2>
             <ol>
                 <li><a href="https://openreview.net/pdf?id=pXlmOmlHJZ">ICLR: IN-CONTEXT LEARNING OF REPRESENTATIONS</a></li>
@@ -107,7 +111,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 My Website. Built with vanilla JavaScript.</p>
+        <p>&copy; 2025 Feng Jingyuan.</p>
     </footer>
 </body>
 </html>

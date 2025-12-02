@@ -140,6 +140,45 @@ main {
     text-decoration-style: solid;
 }
 
+/* About me 左右布局 */
+.intro-content {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.intro-text {
+    flex: 1;
+}
+
+.intro-text h2:first-child {
+    margin-top: 0;
+}
+
+.intro-image {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+.intro-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+@media (max-width: 768px) {
+    .intro-content {
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+
+    .intro-image {
+        width: 200px;
+        margin-bottom: 1rem;
+    }
+}
+
 /* 文章列表 */
 .post-list {
     display: grid;
@@ -331,6 +370,12 @@ footer {
 
 footer a {
     color: var(--accent-color);
+}
+
+.visitor-count {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    opacity: 0.8;
 }
 
 /* 出版物页面 */
