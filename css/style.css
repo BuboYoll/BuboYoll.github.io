@@ -157,12 +157,14 @@ main {
 
 .intro-image {
     width: 280px;
+    height: 350px;
     flex-shrink: 0;
 }
 
 .intro-image img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
     border-radius: 8px;
     border: 1px solid var(--border-color);
 }
