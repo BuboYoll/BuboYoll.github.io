@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Randomness in Language Models</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html" class="active">Blog</a></li>
+            <li><a href="../pub/index.html">Pub</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <article class="post-content">
+            <a class="back-btn" href="index.html">← Back to Blog</a>
+
+            <h1>Randomness in Language Models</h1>
+            <p class="meta">2025.12.3</p>
+
+            <p>Current language models use temperature sampling to introduce randomness in output stage, which alters the learned distribution from pre-training by <em>increasing entropy</em>. However, recent study on RL shows that the policy entropy and downstream performance has a clear correspondance:</p>
+
+            <p style="text-align: center; font-size: 1.5rem;">
+                $$R = -a\exp H + b$$
+            </p>
+
+            <p>where $H$ is the policy entropy and $R$ is the downstream performance. This contradicts with the motivation of temperature sampling.</p>
+
+            <h2>Simply add a random string?</h2>
+            <p>What if we just simply add a random string before the input as a randomness, and always use greedy decoding? Call it <strong>hash conditioning.</strong></p>
+
+            <p>For example:</p>
+            <p style="background: #f5f5f5; padding: 1rem; border-radius: 5px; font-family: monospace;">
+                Normal prompt: "Solve this with minimal code length." → <br>Hash conditioning: "&lt;ask289a12&gt; Solve this with minimal code length."
+            </p>
+
+            <p>The following is a jumping stair problem from leetcode, I sent to gemini 2.5 pro with the above prompt and see difference:</p>
+
+            <div class="code-row">
+                <figure>
+                    <pre><code>g=len(nums)-1
+for i in range(len(nums))[::-1]:
+    if i+nums[i]>=g:g=i
+return g==0</code></pre>
+                    <figcaption>Without hash conditioning: Characters count=70</figcaption>
+                </figure>
+                <figure>
+                    <pre><code>m=0
+for i,n in enumerate(nums):
+    if i>m:return False
+    m=max(m,i+n)
+return True</code></pre>
+                    <figcaption>With hash conditioning: Characters count=66</figcaption>
+                </figure>
+            </div>
+
+            <div class="char-counter">
+                <p><strong>Try it yourself:</strong> Paste code below to count characters (excluding spaces and newlines)</p>
+                <textarea id="code-input" placeholder="Paste your code here..."></textarea>
+                <div class="counter-result">Character count: <span id="char-count">0</span></div>
+            </div>
+
+            <p>We can see the one with hash conditioning does have less length!</p>
+
+            <p>Let's try on more models with different settings, comparing temperature sampling and hash conditioning.</p>
+
+            <h2>Experiment</h2>
+
+            <h3>Coding problems: Human Eval</h3>
+
+            <p>At first, set a relative small fixed temperature $T=0.2$ and fixed hash string length $L=5$. Compare 3 model's performance by <a href="https://huggingface.co/datasets/openai/openai_humaneval">human-eval</a> (OpenAI).</p>
+
+            <div class="image-row">
+                <figure>
+                    <img src="../assets/blog2/human_acc.png" alt="Accuracy comparison">
+                    <figcaption>Accuracy comparison</figcaption>
+                </figure>
+                <figure>
+                    <img src="../assets/blog2/string_count.png" alt="Character count comparison">
+                    <figcaption>Character count comparison</figcaption>
+                </figure>
+            </div>
+
+            <p>Accuracy is a little better, but average characters is more. Another thing is larger model is more robust to the additional string.</p>
+
+            <p>This might due to the effect of previous string on the latter tokens' representation, especially on reasoning problems this disadvantage is magnified.</p>
+
+            <p>How about knowledge testing problems?</p>
+
+            <h3>GPQA-diamond: knowledge</h3>
+
+            <p>Make the experiment setting more rigorous: compare</p>
+            <ol>
+                <li>different temperature sampling + majority voting</li>
+                <li>different hash string length + majority voting</li>
+            </ol>
+
+            <p>The 2 figures are results for gemma-3-27B and gemma-3-12B.</p>
+
+            <div class="image-row">
+                <figure>
+                    <img src="../assets/blog2/gemma-27b-gpqa.png" alt="GPQA results for gemma-3-27B">
+                    <figcaption>gemma-3-27B results</figcaption>
+                </figure>
+                <figure>
+                    <img src="../assets/blog2/gemma-12b-gpqa.png" alt="GPQA results for gemma-3-12B">
+                    <figcaption>gemma-3-12B results</figcaption>
+                </figure>
+            </div>
+
+            <p>Looks good: the 2 models here can benefit from hash conditioning compared to other 3 temperature settings.</p>
+
+            <h3>AIME: reasoning ability</h3>
+
+            <p>From the toy experiment before, one may concern the disadvantage of hash conditioning on reasoning problems. Let's see if it is true on the above models:</p>
+
+            <figure style="max-width: 700px; margin: 1rem auto; text-align: center;">
+                <img src="../assets/blog2/gemma-12b-aime.png" alt="AIME results" style="width: 100%;">
+                <figcaption>AIME reasoning benchmark results</figcaption>
+            </figure>
+
+            <figure style="max-width: 700px; margin: 1rem auto; text-align: center;">
+                <img src="../assets/blog2/gemma-27b-aime.png" alt="AIME results" style="width: 100%;">
+                <figcaption>AIME reasoning benchmark results</figcaption>
+            </figure>
+
+            <p>The figure does prove the concern: condition the whole reasoning trajectory on hash string is a bad idea, in comparison, temperature sampling does not change the representation of tokens.</p>
+
+            <h3>Reddit joke: diversity</h3>
+
+            <p>Temperature sampling makes output more diverse, can hash conditioning achieve this?</p>
+
+            <p>Testing diversity on single-choice problems like GPQA/AIME or coding problems is not a good idea. How about jokes? Can model tell different jokes by hash conditioning?</p>
+
+            <p>Compare diversity by</p>
+            <ol>
+                <li>The cosine distance between 5 text-embedding of generated jokes, according to hash conditioning and temperature sampling, respectively.</li>
+                <li>LLM-as-a-judge: set the standard joke in the dataset as reference, let claude-3.7-sonnet judge the 5 jokes generated by hash conditioning and temperature sampling, respectively.</li>
+            </ol>
+
+            <p>The following is the average score of hash conditioning and temperature sampling:</p>
+
+           <figure style="max-width: 700px; margin: 1rem auto; text-align: center;">
+                <img src="../assets/blog2/diversity.png" alt="AIME results" style="width: 100%;">
+                <figcaption>AIME reasoning benchmark results</figcaption>
+            </figure>
+
+            <p>Despite the high variance, one can still conclude that hash conditioning does not give a more diverse distribution.</p>
+
+            <h3>Summary</h3>
+
+            <p>Adding a random string before the prompt and use greedy decoding is not a good idea, obviously:</p>
+
+            <ol>
+                <li>In pre-training data, no such pattern exist.</li>
+                <li>It "perturbs" the representation of downstream tokens, leads to poor reasoning ability.</li>
+            </ol>
+
+            <p>In comparison to temperature sampling, which alters a <strong>learned distribution</strong> after it is produced, hash conditioning instead <strong>tries to produce a different distribution</strong> by adding random string.</p>
+
+            <p>Although the experiment result does not conclude that hash conditioning is better than temperature sampling, we can still think of the problem:</p>
+
+            <p style="font-style: italic; text-align: center;">"Is there any better way to introduce diversity or randomness into language model?"</p>
+
+            <h2>Other ways of introducing randomness</h2>
+
+            <p>Diffusion language model learns the joint distribution of sequence, instead of auto-regressive distribution. By controlling the noise scheduler, one can inject different types of noise.</p>
+
+            <p>However, disadvantages like the slow sampling speed and high training complexity is also true.</p>
+
+            <p>One might think how to combine the advantage of diffusion language model and auto-regressive language model, please wait for the next blog/pub!</p>
+
+            <h2>Reference</h2>
+            <ol>
+                <li><a href="https://arxiv.org/pdf/2504.15266">Roll the dice & look before you leap: Going beyond the creative limits of next-token prediction</a></li>
+            </ol>
+        </article>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Feng Jingyuan.</p>
+    </footer>
+
+    <script>
+        const codeInput = document.getElementById('code-input');
+        const charCount = document.getElementById('char-count');
+
+        codeInput.addEventListener('input', function() {
+            const text = this.value;
+            const count = text.replace(/\s/g, '').length;
+            charCount.textContent = count;
+        });
+    </script>
+</body>
+</html>
