@@ -323,6 +323,135 @@ main {
   }
 }
 
+/* 两图并排布局 */
+.image-row {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  max-width: 900px;
+  margin: 1.5rem auto;
+}
+
+.image-row figure {
+  flex: 1;
+  max-width: 45%;
+  margin: 0;
+  text-align: center;
+}
+
+.image-row img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.image-row figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.9em;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .image-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .image-row figure {
+    max-width: 90%;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* 两代码块并排布局 */
+.code-row {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  max-width: 900px;
+  margin: 1.5rem auto;
+}
+
+.code-row figure {
+  flex: 1;
+  max-width: 45%;
+  margin: 0;
+  text-align: center;
+}
+
+.code-row pre {
+  background: #0a0a0a;
+  color: var(--accent-color);
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  text-align: left;
+  margin: 0;
+}
+
+.code-row code {
+  font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 0.85rem;
+}
+
+.code-row figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.9em;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .code-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .code-row figure {
+    max-width: 90%;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* 字符计数器组件 */
+.char-counter {
+  background: #0a0a0a;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 1.5rem auto;
+  max-width: 500px;
+}
+
+.char-counter p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.char-counter textarea {
+  width: 100%;
+  height: 100px;
+  background: var(--bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0.5rem;
+  font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 0.85rem;
+  resize: vertical;
+}
+
+.char-counter textarea:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.char-counter .counter-result {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: var(--accent-color);
+}
+
 .post-content p {
     margin-bottom: 1rem;
 }
