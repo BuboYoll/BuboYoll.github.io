@@ -38,6 +38,23 @@
 
             <p>The blink-detection piece is what's missing from most existing tools. I extended it to work with <strong>Continuity Camera</strong> (iPhone as webcam) and any external camera, so it works in a clamshell setup with an external monitor. All the image processing runs locally — nothing leaves the machine.</p>
 
+            <h2>The parrot in the menubar</h2>
+
+            <p>Instead of a number or a dry status icon, I wanted the blink-detector to feel friendly, so the menubar shows a small blue parrot whose state mirrors mine. When my eyes are open, the parrot's eyes are open. When I blink, the parrot blinks too — except its "closed-eye" state is a pair of pixel-art sunglasses, because a parrot squinting at a screen all day deserves some shades.</p>
+
+            <div class="image-row">
+                <figure>
+                    <img src="../assets/blog3/parrot_open.png" alt="Parrot with eyes open">
+                    <figcaption>Eyes open — parrot is watching with you.</figcaption>
+                </figure>
+                <figure>
+                    <img src="../assets/blog3/parrot_closed.png" alt="Parrot wearing sunglasses (blinking)">
+                    <figcaption>Blink detected — parrot puts on its shades.</figcaption>
+                </figure>
+            </div>
+
+            <p>It's a tiny detail, but it matters: the icon turns the detector from a silent background process into something I glance at and immediately understand. If the parrot stops swapping states for a while, I know I've stopped blinking — and that's the cue to relax my eyes before the screen-edge animation has to nudge me.</p>
+
             <h2>Why vibe-coding worked here</h2>
 
             <p>This was a good fit for vibe-coding because the problem is well-scoped, the building blocks exist (AVFoundation for the camera, Vision framework for face landmarks, CGDisplay APIs for the color shift), and I'm the only user — I can iterate on what feels right rather than write a spec.</p>
