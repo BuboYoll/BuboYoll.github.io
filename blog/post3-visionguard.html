@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionGuard: Vibe-coding an eye-care app with Claude Code</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html" class="active">Blog</a></li>
+            <li><a href="../pub/index.html">Pub</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <article class="post-content">
+            <a class="back-btn" href="index.html">← Back to Blog</a>
+
+            <h1>VisionGuard: vibe-coding my own dry-eye relief app</h1>
+            <p class="meta">2026.5.9</p>
+
+            <p>I spend most of my day staring at a screen — reading papers, debugging Python, training models. After a few hours, my eyes feel sandy and my focus drifts. Classic digital eye strain: too much sustained near-focus, not enough blinking, too much blue light before bed.</p>
+
+            <p>I tried existing tools. <em>f.lux</em> handles color temperature well but does nothing about blinking. <em>BlinkMore</em> tracks blinks but only with the built-in webcam, which is useless when I'm working with a closed laptop and an external monitor. Nothing tied all three pieces together.</p>
+
+            <p>So I vibe-coded one with Claude Code over a weekend. The result is <a href="https://github.com/BuboYoll/VisionGuard">VisionGuard</a>, a small native macOS app that combines the three interventions I actually wanted.</p>
+
+            <h2>What it does</h2>
+
+            <ol>
+                <li><strong>Periodic rest reminders.</strong> Schedules look-away alerts so the ciliary muscle gets a break from sustained near focus — the 20-20-20 rule, automated.</li>
+                <li><strong>Blink detection.</strong> Watches blink rate through the camera. When I stop blinking enough (which happens silently when I'm concentrating), the screen edges pulse with a soft gradient as a peripheral nudge — non-intrusive, but hard to ignore.</li>
+                <li><strong>Dynamic color temperature.</strong> An f.lux-style warm shift through the day to cut blue light in the evening.</li>
+            </ol>
+
+            <p>The blink-detection piece is what's missing from most existing tools. I extended it to work with <strong>Continuity Camera</strong> (iPhone as webcam) and any external camera, so it works in a clamshell setup with an external monitor. All the image processing runs locally — nothing leaves the machine.</p>
+
+            <h2>Why vibe-coding worked here</h2>
+
+            <p>This was a good fit for vibe-coding because the problem is well-scoped, the building blocks exist (AVFoundation for the camera, Vision framework for face landmarks, CGDisplay APIs for the color shift), and I'm the only user — I can iterate on what feels right rather than write a spec.</p>
+
+            <p>What surprised me: most of the time wasn't spent writing code, it was spent <em>noticing</em>. Watching the gradient animation pulse on my real screen and realizing it was too aggressive. Catching that the blink-rate threshold drifted when I wore glasses. Realizing the menubar icon needed a clearer "is the camera on" affordance. None of these were on my mental list at the start. Claude Code shortened the loop from "I notice something" to "it's fixed" enough that I actually iterated on the UX instead of shipping the first thing that compiled.</p>
+
+            <h2>Stack</h2>
+
+            <ul>
+                <li><strong>Platform:</strong> macOS 14+, Apple Silicon</li>
+                <li><strong>Language:</strong> Swift</li>
+                <li><strong>License:</strong> Apache 2.0</li>
+                <li><strong>Built on:</strong> the BlinkMore project, extended with external-camera support</li>
+            </ul>
+
+            <p>If your eyes are also unhappy after a long day, the DMG is on the <a href="https://github.com/BuboYoll/VisionGuard/releases">releases page</a>. Source is <a href="https://github.com/BuboYoll/VisionGuard">here</a> — issues and PRs welcome.</p>
+        </article>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Feng Jingyuan.</p>
+    </footer>
+</body>
+</html>
