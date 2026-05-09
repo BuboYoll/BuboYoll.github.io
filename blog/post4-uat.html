@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How a 1-hidden-layer ReLU network learns a continuous function</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html" class="active">Blog</a></li>
+            <li><a href="../pub/index.html">Pub</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <article class="post-content">
+            <a class="back-btn" href="index.html">← Back to Blog</a>
+
+            <h1>How a 1-hidden-layer ReLU network learns a continuous function</h1>
+            <p class="meta">2026.5.9</p>
+
+            <p>The universal approximation theorem says that a network with a single hidden layer can approximate any continuous function arbitrarily well, given enough neurons. The classical proofs (Cybenko, Hornik) are abstract. Here is a concrete, geometric construction that explains <em>how</em> the network does it, in the simplest case: a $(1, n, 1)$ network with ReLU activation, learning a continuous function $f: [a, b] \to \mathbb{R}$.</p>
+
+            <h2>Setup</h2>
+            <p>Let the hidden-layer weights and biases be $w^{(1)}_j, b^{(1)}_j$ and the output-layer weights $w^{(2)}_j, b^{(2)}_j$, for $j = 1, \dots, n$. Each hidden neuron computes</p>
+            <p style="text-align: center; font-size: 1.2rem;">
+                $$h_j(x) = \mathrm{ReLU}\big(w^{(1)}_j x + b^{(1)}_j\big).$$
+            </p>
+            <p>Define the <em>kink point</em> $q_j$ of neuron $j$ by $w^{(1)}_j q_j + b^{(1)}_j = 0$, i.e.</p>
+            <p style="text-align: center; font-size: 1.2rem;">
+                $$q_j = -\frac{b^{(1)}_j}{w^{(1)}_j}.$$
+            </p>
+            <p>Without loss of generality take $w^{(1)}_j = 1,\ b^{(1)}_j = -q_j$ so $h_j(x) = \mathrm{ReLU}(x - q_j)$.</p>
+
+            <h2>Two neurons make a ramp</h2>
+            <p>Take two neurons $j, k$ with $q_j < q_k$. Then</p>
+            <ul>
+                <li>$x &lt; q_j$: $h_j(x) = h_k(x) = 0$</li>
+                <li>$q_j \le x \le q_k$: $h_j(x) = x - q_j,\ h_k(x) = 0$</li>
+                <li>$x &gt; q_k$: $h_j(x) = x - q_j,\ h_k(x) = x - q_k$</li>
+            </ul>
+            <p>Couple their output weights with opposite signs and equal biases:</p>
+            <p style="text-align: center; font-size: 1.2rem;">
+                $$w^{(2)}_k = -w^{(2)}_j =: w_{(j,k)}, \qquad b^{(2)}_j = b^{(2)}_k =: \tfrac{1}{2} b_{(j,k)}.$$
+            </p>
+            <p>Their summed contribution to the output is</p>
+            <p style="text-align: center; font-size: 1.2rem;">
+                $$y_{(j,k)}(x) = w_{(j,k)} \big[h_j(x) - h_k(x)\big] + b_{(j,k)},$$
+            </p>
+            <p>which evaluates to a "ramp":</p>
+            <p style="text-align: center; font-size: 1.2rem;">
+                $$y_{(j,k)}(x) = \begin{cases}
+                    b_{(j,k)}, & x &lt; q_j \\
+                    w_{(j,k)}(x - q_j) + b_{(j,k)}, & x \in [q_j, q_k] \\
+                    w_{(j,k)}(q_k - q_j) + b_{(j,k)}, & x &gt; q_k.
+                \end{cases}$$
+            </p>
+            <p>So a pair of ReLU neurons produces a function that is constant on $(-\infty, q_j)$, linear on $[q_j, q_k]$ with slope $w_{(j,k)}$, and constant again on $(q_k, \infty)$. Each such pair owns one linear segment.</p>
+
+            <h2>Stitching pairs into a piecewise-linear approximation</h2>
+            <p>Partition $[a, b]$ into $m = n/2$ equal sub-intervals of width $\delta = (b - a)/m$. For the $l$-th interval $[a + (l-1)\delta,\ a + l\delta]$, dedicate the pair $(2l-1, 2l)$ with</p>
+            <p style="text-align: center; font-size: 1.2rem;">
+                $$q_{2l-1} = a + (l-1)\delta, \quad q_{2l} = a + l\delta,$$
+                $$w_{(2l-1, 2l)} = \frac{f(a + l\delta) - f(a + (l-1)\delta)}{\delta}.$$
+            </p>
+            <p>That is, set the slope of pair $l$ to the secant slope of $f$ on its interval. Each pair contributes the constant $w_{(2l-1, 2l)} \cdot \delta = f(a + l\delta) - f(a + (l-1)\delta)$ to the right of its interval. Telescoping over all pairs, for $x \in [a + (l-1)\delta,\ a + l\delta]$ the network output is</p>
+            <p style="text-align: center; font-size: 1.1rem;">
+                $$\sum_{l'=1}^{m} y_{(2l'-1,\, 2l')}(x) = f(a + (l-1)\delta) - f(a) + w_{(2l-1, 2l)}\big(x - a - (l-1)\delta\big) + \sum_{l'=1}^{m} b_{(2l'-1,\, 2l')}.$$
+            </p>
+            <p>Choose the global offset $\sum_{l'} b_{(2l'-1,\, 2l')} = f(a)$ (e.g. put it all on the first pair) and the right-hand side becomes the linear interpolant of $f$ between its endpoint values on the $l$-th interval. As $\delta \to 0$ the piecewise-linear approximation converges uniformly to $f$. Continuous functions are well approximated by piecewise-linear ones, and ReLU networks are piecewise-linear by construction — that is the entire trick.</p>
+
+            <h2>Does a trained network actually do this?</h2>
+            <p>The construction above is a hand-built solution. A real network found by gradient descent need not parameterize itself this way. But the <em>geometric</em> claim is testable: after training, the network output should be piecewise-linear, with kinks exactly at $q_j = -b^{(1)}_j / w^{(1)}_j$, and the slope on $[q_l, q_{l+1}]$ should equal the secant slope of the target on that interval.</p>
+
+            <p>I trained a $(1, 200, 1)$ ReLU network with Adam for 20 000 steps to fit $f(x) = x^2$ on $[-1, 1]$, then read off all $q_j$ and the slope of each segment between consecutive kinks.</p>
+
+            <figure style="max-width: 950px; margin: 1.5rem auto; text-align: center;">
+                <img src="../assets/blog4/uat-verification.png" alt="Trained NN matches x^2 with piecewise linear segments; segment slopes match q_l + q_{l+1}." style="width: 100%;">
+                <figcaption><strong>(a)</strong> The network output (orange dashed) is visually indistinguishable from $f(x) = x^2$ (navy). Gray vertical lines mark every kink $q_j = -b^{(1)}_j / w^{(1)}_j$; 101 of the 200 neurons place their kink inside $[-1, 1]$. <strong>(b)</strong> For each adjacent pair of in-domain kinks $(q_l, q_{l+1})$, the measured slope of the network on that segment (dots) is plotted against the segment midpoint. The teal line is the prediction from the construction: for $f(x) = x^2$, the secant slope on $[q_l, q_{l+1}]$ is $(q_{l+1}^2 - q_l^2)/(q_{l+1} - q_l) = q_l + q_{l+1}$. Median relative error: <strong>1.6%</strong>.</figcaption>
+            </figure>
+
+            <p>Two things to notice. First, the kinks distribute roughly uniformly on $[-1, 1]$ — which is exactly the optimal density for a function of constant curvature, since the optimal kink density for piecewise-linear approximation scales as $|f''|^{1/3}$, and $f''(x) = 2$ here. Second, the measured slopes lie on the line $y = 2 \cdot \text{midpoint}$ to within ~1.6% median error, confirming each segment is the chord of $x^2$ on $[q_l, q_{l+1}]$. The trained network has, in effect, discovered the construction above.</p>
+
+            <p>Half of the neurons place their kink outside $[-1, 1]$ and contribute only a linear function on the input domain. They do not waste capacity — they collectively account for the global offset and tilt of the approximation — but in a finite-data regime they are not where the model puts its representational power.</p>
+
+            <h2>Seeing the strategy directly</h2>
+            <p>The cleanest way to confirm the chord-by-chord picture is to plot, for each pair of adjacent kinks $(q_l, q_{l+1})$, the line that the network actually computes on that segment, and overlay $f(x) = x^2$. To make individual segments visible, I trained a smaller network ($n = 20$) and also include a zoom into a $(n = 200)$ network for comparison.</p>
+
+            <figure style="max-width: 950px; margin: 1.5rem auto; text-align: center;">
+                <img src="../assets/blog4/uat-chords.png" alt="Each NN segment plotted as a chord of x^2; small n shows clear segments, large n zoom shows the same strategy at fine scale." style="width: 100%;">
+                <figcaption><strong>(a)</strong> A network with only $n = 20$ neurons places 6 kinks (black dots) inside $[-1, 1]$, partitioning the domain into 7 segments. On each segment the network is a single line — drawn in alternating orange/teal — which is exactly the chord of $x^2$ between the two adjacent kinks. Because $x^2$ is convex, every chord lies slightly above the parabola and meets it tangentially at the kinks. <strong>(b)</strong> Zooming a $n = 200$ network into $[0.4, 0.7]$ reveals the identical strategy at finer scale: the fit looks smooth from far away but is still a polygonal chain of chords up close. The strategy is invariant in $n$ — increasing $n$ just packs in more, smaller chords.</figcaption>
+            </figure>
+
+            <h2>Why this is a useful picture</h2>
+            <p>Stating universal approximation as "a smooth function is the limit of its piecewise-linear interpolants, and a ReLU network is exactly a piecewise-linear function" makes the result feel almost trivial — and it is, in 1D. The depth and difficulty in higher dimensions come from how kinks combine across multiple input axes, and from how compositional depth lets the number of linear regions grow exponentially with depth. But the 1D picture is the right starting intuition: the network is bending a continuous piecewise-linear surface to match data, one kink at a time.</p>
+        </article>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Jingyuan Feng.</p>
+    </footer>
+</body>
+</html>
